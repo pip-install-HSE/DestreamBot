@@ -24,3 +24,5 @@ class Group(Model):
 #     tg_id = db.Column(db.BigInteger())
 #     token = db.Column(db.Unicode(), default="", max_length=256)
 #     lang = db.Column(db.Unicode(), max_length=2, default="ru")
+
+# aerich init -t config.TORTOISE_ORM && aerich init-db && aerich migrate && aerich upgrade && 
