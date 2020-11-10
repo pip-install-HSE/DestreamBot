@@ -34,8 +34,8 @@ jobs:
       - name: Push images
         run: | 
           docker push ${{ secrets.BOT_IMG }}
-          
-     
+
+
   deploy:
     name: Deploy
     runs-on: ubuntu-latest

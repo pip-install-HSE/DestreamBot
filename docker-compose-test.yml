@@ -44,7 +44,7 @@ services:
 
   celery-beat:
     container_name: celery-beat
-    image: docker.pkg.github.com/wityat/pip-install-hse/destreambot/tg_bot:latest
+    image: docker.pkg.github.com/pip-install-hse/destreambot/tg_bot:latest
     working_dir: "/code/tg_bot"
     command: sh -c "rm -rf celerybeat.pid && celery -A adminka beat -l info"
     env_file:
