@@ -1,7 +1,6 @@
 import os
 
 from aiogram import executor
-from django.core.management import BaseCommand
 from .tgbot.load_all import bot
 from .db.models import BotUser
 
