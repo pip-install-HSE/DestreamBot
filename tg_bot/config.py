@@ -27,7 +27,7 @@ TORTOISE_ORM = {
     "connections": {"default": f'{DATABASE}://{PG_USER}:{PG_PASS}@{PG_HOST}:{PG_PORT}/{PG_DB}'},
     "apps": {
         "models": {
-            "models": ["tests.models", "aerich.models"],
+            "models": ["db.models", "aerich.models"],
             "default_connection": "default",
         },
     },
