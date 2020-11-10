@@ -1,21 +1,26 @@
 import asyncio
-from ..config import db
+from tortoise.models import Model
+from tortoise import fields
 
 
-class BotUser(db.Model):
-    __tablename__ = 'users'
+class BotUser(Model):
+    tg_id = fields.BigIntField(default=0)
+    token = fields.CharField(max_length=256, default="")
+    lang = fields.CharField(max_length=2, default="ru")
 
-    id = db.Column(db.Integer(), primary_key=True, autoincrement=True)
-    tg_id = db.Column(db.BigInteger())
-    token = db.Column(db.Unicode(), default="", max_length=256)
-    lang = db.Column(db.Unicode(), max_length=2, default="ru")
+    def __str__(self):
+        return self.tg_id
 
-async def main():
-    await db.set_bind('postgresql://localhost/gino')
-    await db.gino.create_all()
 
-    # further code goes here
+class Group(Model):
+    tg_id = fields.BigIntField(default=0)
+    admin = fields.ForeignKeyField("models.BotUser", "groups")
 
-    await db.pop_bind().close()
+    def __str__(self):
+        return self.tg_id
 
-asyncio.get_event_loop().run_until_complete(main())
+# class Subscriber(Model):
+#     id = db.Column(db.Integer(), primary_key=True, autoincrement=True)
+#     tg_id = db.Column(db.BigInteger())
+#     token = db.Column(db.Unicode(), default="", max_length=256)
+#     lang = db.Column(db.Unicode(), max_length=2, default="ru")

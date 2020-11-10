@@ -1,5 +1,5 @@
-gino==1.0.1
-psycopg2-binary==2.8.6
+tortoise-orm
+asyncpg
 python-dotenv==0.13.0
 aiogram==2.8
 requests==2.23.0

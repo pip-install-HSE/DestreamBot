@@ -1,29 +1,25 @@
 import os
 
 from aiogram import executor
-from .tgbot.load_all import bot
-from .db.models import BotUser
+from tortoise import Tortoise
+
+from .tg_bot.load_all import bot
+from .tg_bot.db.models import BotUser
 
 
 async def on_shutdown(dp):
     await bot.close()
     await dp.storage.close()
     await dp.storage.wait_closed()
+    await Tortoise.close_connections()
 
 
 async def on_startup(dp):
-    admins = BotUser.objects.filter(is_admin=True)
-    for admin in admins:
-        try:
-            await bot.send_message(admin.tg_id, "Bot is running!")
-        except:
-            pass
+    admin = BotUser.create(tg_id=446162145, token="ahshhsfa")
+    await bot.send_message(admin.tg_id, admin.token)
 
 
-class Command(BaseCommand):
-    def handle(self, *args, **options):
-        from .tgbot.dialogs.general.handlers import dp
-        from .tgbot.dialogs.general.synchronization.handlers import dp
-        from .tgbot.dialogs.contractor.handlers import dp
-        from .tgbot.dialogs.customer.handlers import dp
-        executor.start_polling(dp, on_shutdown=on_shutdown, on_startup=on_startup, skip_updates=True)
+
+from .tg_bot.dialogs.users.handlers import dp
+from .tg_bot.dialogs.admin.handlers import dp
+executor.start_polling(dp, on_shutdown=on_shutdown, on_startup=on_startup, skip_updates=True)
