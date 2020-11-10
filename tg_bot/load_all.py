@@ -20,5 +20,5 @@ i18n.reload()
 
 _ = i18n.gettext
 
-await Tortoise.init(config=TORTOISE_ORM)
+loop.run_until_complete(Tortoise.init(config=TORTOISE_ORM))
 # await Tortoise.generate_schemas()
