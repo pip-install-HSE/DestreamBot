@@ -27,7 +27,7 @@ services:
       - "./test.env"
     volumes:
       - /home/www/bot/tg_bot:/code/tg_bot
-    command: sh -c "aerich init -t config.TORTOISE_ORM && aerich init-db && aerich migrate && aerich upgrade && python start_tg_bot.py"
+    command: sh -c "python start_tg_bot.py"
     restart: always
 
   celery:
