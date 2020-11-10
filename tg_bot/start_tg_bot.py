@@ -3,8 +3,8 @@ import os
 from aiogram import executor
 from tortoise import Tortoise
 
-from tg_bot.load_all import bot
-from tg_bot.db.models import BotUser
+from .load_all import bot
+from .db.models import BotUser
 
 
 async def on_shutdown(dp):
