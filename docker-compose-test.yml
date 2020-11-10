@@ -25,8 +25,6 @@ services:
       - db
     env_file:
       - "./test.env"
-    volumes:
-      - /home/www/bot/tg_bot:/code/tg_bot
     command: sh -c "python start_tg_bot.py"
     restart: always
 
@@ -37,8 +35,6 @@ services:
     command: celery -A adminka worker -l info
     env_file:
       - "./test.env"
-    volumes:
-      - /home/www/bot/tg_bot:/code/tg_bot
     depends_on:
       - redis
 
@@ -49,7 +45,5 @@ services:
     command: sh -c "rm -rf celerybeat.pid && celery -A adminka beat -l info"
     env_file:
       - "./test.env"
-    volumes:
-      - /home/www/bot/tg_bot:/code/tg_bot
     depends_on:
       - redis
