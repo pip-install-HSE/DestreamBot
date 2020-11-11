@@ -54,13 +54,22 @@ async def add_group(callback: types.CallbackQuery, state: FSMContext):
     await callback.answer()
 
 
-@dp.message_handler(IsBotNewChatMember(), state=States.add_group)
+@dp.message_handler(IsBotNewChatMember())
 # content_types=types.ContentTypes.NEW_CHAT_MEMBERS,
 async def new_chat_member(message: types.Message, state: FSMContext):
     await States.notifications.set()
     await message.answer(texts.notifications(), reply_markup=keyboards.notifications())
 
 
-# @dp.callback_query_handler(Button("yes"), state=States.notifications)
+@dp.callback_query_handler(Button("yes"), state=States.notifications)
+async def notify_yes(message: types.Message):
+    await message.answer("1")
+
+
+@dp.callback_query_handler(Button("yes"), state=States.notifications)
+async def notify_yes(message: types.Message):
+    await message.answer("1")
+
+
 # @dp.callback_query_handler(Button("add_group"), state="*"):
 # await state.reset_state(with_data=False)
