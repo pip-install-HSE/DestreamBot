@@ -9,10 +9,10 @@ class GetUserMiddleware(BaseMiddleware):
         super(GetUserMiddleware, self).__init__()
 
     async def on_pre_process_callback_query(self, callback_query: types.CallbackQuery, data: dict):
-        data["bot_user"] = self.get_or_create_user(callback_query.message.chat.id)
+        data["bot_user"] = await self.get_or_create_user(callback_query.message.chat.id)
 
     async def on_pre_process_message(self, message: types.Message, data: dict):
-        data["bot_user"] = self.get_or_create_user(message.chat.id)
+        data["bot_user"] = await self.get_or_create_user(message.chat.id)
 
     async def get_or_create_user(self, tg_id):
         try:
