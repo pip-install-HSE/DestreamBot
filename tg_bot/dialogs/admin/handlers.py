@@ -33,9 +33,14 @@ async def token(message: types.Message, state: FSMContext, bot_user: BotUser):
     loop = asyncio.get_running_loop()
     async with aiohttp.ClientSession(loop=loop) as client:
         async with client.get(url, headers=headers) as response:
-            if response.status_code == 200:
+            if response.status == 200:
                 await message.answer(texts.main_menu(bot_user.token),
                                      reply_markup=keyboards.main_menu())
                 bot_user.token = message.text
                 await bot_user.save()
+                await state.reset_state(with_data=False)
+            else:
+                await message.answer(texts.error_token())
+
+
     # await state.reset_state(with_data=False)
