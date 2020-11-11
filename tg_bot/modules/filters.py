@@ -1,6 +1,6 @@
-
 from aiogram.dispatcher.filters import BoundFilter
 from aiogram.types import Message, CallbackQuery
+from ..load_all import bot
 
 
 class Button(BoundFilter):
@@ -19,3 +19,13 @@ class Button(BoundFilter):
                 return self.key in message.data
             else:
                 return self.key == message.data
+
+
+class IsBotNewChatMember(BoundFilter):
+    def __init__(self):
+        pass
+
+    async def check(self, message: Message) -> bool:
+        if members := message.__getattribute__("new_chat_members"):
+            for member in members:
+                return True if member.id == bot.id else False

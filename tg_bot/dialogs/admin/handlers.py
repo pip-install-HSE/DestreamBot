@@ -8,6 +8,7 @@ from aiogram.dispatcher.filters import CommandStart
 from ...db.models import BotUser
 from ...load_all import dp, bot
 from . import texts, keyboards
+from ...modules.filters import Button, IsBotNewChatMember
 
 import sys
 import asyncio
@@ -18,6 +19,8 @@ import datetime
 
 class States(StatesGroup):
     token = State()
+    add_group = State()
+    notifications = State()
 
 
 @dp.message_handler(CommandStart(deep_link=""), state="*")
@@ -43,4 +46,18 @@ async def token(message: types.Message, state: FSMContext, bot_user: BotUser):
                 await message.answer(texts.error_token())
 
 
-    # await state.reset_state(with_data=False)
+@dp.callback_query_handler(Button("add_group"), state="*")
+async def add_group(callback: types.CallbackQuery, state: FSMContext):
+    message = callback.message
+    await message.answer(texts.add_group())
+    await States.add_group.set()
+
+
+@dp.message_handler(IsBotNewChatMember(), state=States.add_group)
+# content_types=types.ContentTypes.NEW_CHAT_MEMBERS,
+async def new_chat_member(message: types.Message, state: FSMContext):
+    await States.notifications.set()
+    await message.answer(texts.notifications(), reply_markup=keyboards.notifications())
+
+# @dp.callback_query_handler(Button("add_group"), state="*"):
+# await state.reset_state(with_data=False)

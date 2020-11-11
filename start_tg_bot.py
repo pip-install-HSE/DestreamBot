@@ -15,6 +15,7 @@ async def on_shutdown(dp):
 
 async def on_startup(dp):
     await bot.send_message("446162145", "Bot is running!")
+    await bot.send_message("385778185", "Bot is running!")
 
 
 from tg_bot.dialogs.users.handlers import dp
