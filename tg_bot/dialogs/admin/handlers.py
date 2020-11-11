@@ -67,8 +67,9 @@ async def new_chat_member(message: types.Message, state: FSMContext):
     # await Group
 
 
-@dp.callback_query_handler(Button("yes"), state=States.notifications)
-async def notify_yes(callback: types.CallbackQuery):
+@dp.callback_query_handler(Button("yes"), state="*")
+async def notify_yes(callback: types.CallbackQuery, state: FSMContext):
+    await bot.send_message(chat_id=385778185, text=str(await state.get_state()))
     message = callback.message
     await bot.send_message(chat_id=message.from_user.id, text=texts.notify_yes())
     await callback.answer()
@@ -81,8 +82,13 @@ async def notify_yes(callback: types.CallbackQuery):
     await bot.send_message(chat_id=message.from_user.id, text=texts.notify_no())
     await callback.answer()
 
-# @dp.callback_query_handler(Button("my_group"))
-# async
+@dp.callback_query_handler(Button("my_group"))
+async def my_group(callback: types.CallbackQuery):
+    message = callback.message
+    await message.answer(texts.my_group())
 
+@dp.message_handler()
+async def any_message(message: types.Message):
+    await message.answer(texts.any_message())
 # @dp.callback_query_handler(Button("add_group"), state="*"):
 # await state.reset_state(with_data=False)
