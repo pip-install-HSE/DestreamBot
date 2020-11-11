@@ -87,7 +87,8 @@ async def notify_no(callback: types.CallbackQuery):
 @dp.callback_query_handler(Button("my_group"))
 async def my_group(callback: types.CallbackQuery, bot_user: BotUser):
     message = callback.message
-    test = await bot_user.groups.all().latest()
+    test = str(await bot_user.groups.all())
+    await bot.send_message(chat_id=385778185, text=test)
     await message.answer(texts.my_group())
 
 
