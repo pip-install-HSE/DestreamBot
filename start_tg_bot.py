@@ -15,8 +15,7 @@ async def on_shutdown(dp):
 
 
 async def on_startup(dp):
-    admin = await BotUser.create(tg_id=446162145, token="ahshhsfa")
-    await bot.send_message(admin.tg_id, admin.token)
+    await bot.send_message("446162145", "Bot is running!")
 
 
 
