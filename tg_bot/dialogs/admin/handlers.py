@@ -25,4 +25,4 @@ async def token(message: types.Message, state: FSMContext, bot_user: BotUser):
     # TODO: проверка на валидность токена желательно aiohttp
     bot_user.token = message.text
     await bot_user.save()
-    await message.answer(texts.main_menu(), reply_markup=keyboards.main_menu())
+    await message.answer(texts.main_menu(bot_user.token), reply_markup=keyboards.main_menu())
