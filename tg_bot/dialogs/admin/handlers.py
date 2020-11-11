@@ -38,7 +38,8 @@ async def token(message: types.Message, state: FSMContext, bot_user: BotUser):
         async with client.get(url, headers=headers) as response:
             if response.status == 200:
                 bot_user.token = message.text
-                json_data = await response.read()
+                data = await response.read()
+                json_data = json.loads(data.decode('utf-8'))
                 await message.answer(texts.main_menu(json_data),
                                      reply_markup=keyboards.main_menu())
                 await bot_user.save()
