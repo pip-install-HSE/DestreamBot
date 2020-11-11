@@ -26,6 +26,10 @@ class IsBotNewChatMember(BoundFilter):
         pass
 
     async def check(self, message: Message) -> bool:
+        flag = False
+        print(bot.id)
         if members := message.__getattribute__("new_chat_members"):
             for member in members:
-                return True if member.id == bot.id else False
+                flag = True if member.id == bot.id else flag
+            print(members)
+        return flag
