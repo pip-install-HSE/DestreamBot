@@ -1,3 +1,4 @@
+import requests
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
@@ -7,6 +8,12 @@ from aiogram.dispatcher.filters import CommandStart
 from ...db.models import BotUser
 from ...load_all import dp, bot
 from . import texts, keyboards
+
+import sys
+import asyncio
+import aiohttp
+import json
+import datetime
 
 
 class States(StatesGroup):
@@ -21,8 +28,14 @@ async def bot_user_start(message: types.Message):
 
 @dp.message_handler(state=States.token)
 async def token(message: types.Message, state: FSMContext, bot_user: BotUser):
-    await state.reset_state(with_data=False)
-    # TODO: проверка на валидность токена желательно aiohttp
-    bot_user.token = message.text
-    await bot_user.save()
-    await message.answer(texts.main_menu(bot_user.token), reply_markup=keyboards.main_menu())
+    url = "https://exp.destream.net/api/v1/telegram-bot/user"
+    headers = {"X-API-KEY": message.text}
+    loop = asyncio.get_running_loop()
+    async with aiohttp.ClientSession(loop=loop) as client:
+        async with client.get(url, headers=headers) as response:
+            if response.status_code == 200:
+                await message.answer(texts.main_menu(bot_user.token),
+                                     reply_markup=keyboards.main_menu())
+                bot_user.token = message.text
+                await bot_user.save()
+    # await state.reset_state(with_data=False)
