@@ -37,9 +37,9 @@ async def token(message: types.Message, state: FSMContext, bot_user: BotUser):
     async with aiohttp.ClientSession(loop=loop) as client:
         async with client.get(url, headers=headers) as response:
             if response.status == 200:
+                bot_user.token = message.text
                 await message.answer(texts.main_menu(bot_user.token),
                                      reply_markup=keyboards.main_menu())
-                bot_user.token = message.text
                 await bot_user.save()
                 await state.reset_state(with_data=False)
             else:
@@ -60,6 +60,7 @@ async def new_chat_member(message: types.Message, state: FSMContext):
     await States.notifications.set()
     await message.answer(texts.notifications(), reply_markup=keyboards.notifications())
 
-# @dp.callback_query_handler(lambda query, state=States.notifications)
+
+# @dp.callback_query_handler(Button("yes"), state=States.notifications)
 # @dp.callback_query_handler(Button("add_group"), state="*"):
 # await state.reset_state(with_data=False)
