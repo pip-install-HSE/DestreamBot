@@ -4,7 +4,6 @@ from aiogram import executor
 from tortoise import Tortoise
 
 from tg_bot.load_all import bot
-from tg_bot.db.models import BotUser
 
 
 async def on_shutdown(dp):
@@ -16,7 +15,6 @@ async def on_shutdown(dp):
 
 async def on_startup(dp):
     await bot.send_message("446162145", "Bot is running!")
-
 
 
 from tg_bot.dialogs.users.handlers import dp

@@ -15,6 +15,7 @@ bot = Bot(token=TG_TOKEN, parse_mode="HTML", loop=loop)
 dp = Dispatcher(bot, storage=storage)
 
 logging.basicConfig(level=logging.DEBUG)
+
 dp.middleware.setup(LoggingMiddleware())
 dp.middleware.setup(GetUserMiddleware())
 i18n = setup_middleware(dp)

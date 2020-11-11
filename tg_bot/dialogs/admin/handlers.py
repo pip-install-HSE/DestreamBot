@@ -11,7 +11,6 @@ from . import texts, keyboards
 
 class States(StatesGroup):
     token = State()
-    default = None
 
 
 @dp.message_handler(CommandStart(deep_link=""), state="*")
@@ -22,9 +21,8 @@ async def bot_user_start(message: types.Message):
 
 @dp.message_handler(state=States.token)
 async def token(message: types.Message, state: FSMContext, bot_user: BotUser):
-    await state.storage.reset_state(user=message.chat.id)
+    await state.reset_state(with_data=False)
     # TODO: проверка на валидность токена желательно aiohttp
     bot_user.token = message.text
     await bot_user.save()
     await message.answer(texts.main_menu(), reply_markup=keyboards.main_menu())
-
