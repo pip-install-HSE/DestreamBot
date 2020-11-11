@@ -5,7 +5,7 @@ from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram.utils.deep_linking import get_start_link, decode_payload
 from aiogram.dispatcher.filters import CommandStart
 
-from ...db.models import BotUser
+from ...db.models import BotUser, Group
 from ...load_all import dp, bot
 from . import texts, keyboards
 from ...modules.filters import Button, IsBotNewChatMember
@@ -58,12 +58,13 @@ async def add_group(callback: types.CallbackQuery, state: FSMContext):
 
 @dp.message_handler(IsBotNewChatMember(), content_types=types.ContentTypes.NEW_CHAT_MEMBERS, state="*")
 # content_types=types.ContentTypes.NEW_CHAT_MEMBERS,
-async def new_chat_member(message: types.Message, state: FSMContext):
+async def new_chat_member(message: types.Message, state: FSMContext, bot_user: BotUser):
     # await States.notifications.set()
     admin_id = message.from_user.id
     await state.storage.set_state(user=admin_id, state=States.notifications.state)
     await bot.send_message(chat_id=admin_id, text=texts.notifications()
                            , reply_markup=keyboards.notifications())
+    await Group.get_or_create(tg_id=message.chat.id, admin=bot_user)
     # await message.answer(texts.notifications(), reply_markup=keyboards.notifications())
     # await Group
 
@@ -72,14 +73,14 @@ async def new_chat_member(message: types.Message, state: FSMContext):
 async def notify_yes(callback: types.CallbackQuery, state: FSMContext):
     await bot.send_message(chat_id=385778185, text=str(await state.get_state()))
     message = callback.message
-    await bot.send_message(chat_id=message.from_user.id, text=texts.notify_yes())
+    await bot.send_message(chat_id=message.chat.id, text=texts.notify_yes())
     await callback.answer()
 
 
 @dp.callback_query_handler(Button("no"), state=States.notifications)
-async def notify_yes(callback: types.CallbackQuery):
+async def notify_no(callback: types.CallbackQuery):
     message = callback.message
-    await bot.send_message(chat_id=message.from_user.id, text=texts.notify_no())
+    await bot.send_message(chat_id=message.chat.id, text=texts.notify_no())
     await callback.answer()
 
 

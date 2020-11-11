@@ -8,4 +8,5 @@ main_menu = lambda: KeyboardInline([{_("Добавить группу"): "add_gr
 check_bot_is_admin = lambda: KeyboardInline([{_("Проверить"): "bot_is_admin"}]).get()
 # _("Перешлите сообщение из группы, в которую Вы хотите подключить бота"
 notifications= lambda: KeyboardInline([{_("Так точно"): "yes", _("Никак нет"): "no"}]).get()
-my_group = lambda: KeyboardInline([{_("Пост для донатов")}]).get()
+my_group = lambda: KeyboardInline([{_("Пост для донатов"): "donation_post"}, {_("Ссылка для доната"): "donation_link"},
+                                   {_("Настройки группы"): "group_settings"}, {_("Назад"): "go_back"}]).get()
