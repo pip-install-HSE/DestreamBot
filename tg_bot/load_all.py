@@ -6,6 +6,7 @@ from aiogram.contrib.fsm_storage.redis import RedisStorage2
 from aiogram.contrib.middlewares.logging import LoggingMiddleware
 
 from .modules.languages_middelware import setup_middleware
+from .modules.middlewares import GetUserMiddleware
 from .config import *
 
 
@@ -15,6 +16,7 @@ dp = Dispatcher(bot, storage=storage)
 
 logging.basicConfig(level=logging.DEBUG)
 dp.middleware.setup(LoggingMiddleware())
+dp.middleware.setup(GetUserMiddleware())
 i18n = setup_middleware(dp)
 i18n.reload()
 

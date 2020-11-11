@@ -17,10 +17,14 @@ class States(StatesGroup):
 @dp.message_handler(CommandStart(deep_link=""), state="*")
 async def bot_user_start(message: types.Message):
     await States.token.set()
-    await message.answer(texts.bot_user_start, reply_markup=keyboards.bot_user_start)
+    await message.answer(texts.bot_user_start(), reply_markup=keyboards.bot_user_start())
 
 
 @dp.message_handler(state=States.token)
-async def token(message: types.Message, state: FSMContext):
+async def token(message: types.Message, state: FSMContext, bot_user: BotUser):
     await state.storage.reset_state(user=message.chat.id)
     # TODO: проверка на валидность токена желательно aiohttp
+    bot_user.token = message.text
+    await bot_user.save()
+    await message.answer(texts.main_menu(), reply_markup=keyboards.main_menu())
+
