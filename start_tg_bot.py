@@ -15,11 +15,11 @@ async def on_shutdown(dp):
 
 
 async def on_startup(dp):
-    admin = BotUser.create(tg_id=446162145, token="ahshhsfa")
+    admin = await BotUser.create(tg_id=446162145, token="ahshhsfa")
     await bot.send_message(admin.tg_id, admin.token)
 
 
 
 from tg_bot.dialogs.users.handlers import dp
 from tg_bot.dialogs.admin.handlers import dp
-executor.start_polling(dp, on_shutdown=on_shutdown, on_startup=None, skip_updates=True)
+executor.start_polling(dp, on_shutdown=on_shutdown, on_startup=on_startup, skip_updates=True)

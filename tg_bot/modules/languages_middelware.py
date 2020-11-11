@@ -7,7 +7,7 @@ from ..db.models import BotUser
 async def get_lang(user_id):
     # Делаем запрос к базе, узнаем установленный язык
     try:
-        user = BotUser.get(tg_id=user_id)
+        user = await BotUser.get(tg_id=user_id)
     except:
         pass
     else:
