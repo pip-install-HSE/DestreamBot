@@ -20,6 +20,7 @@ secondUrl = "https://exp.destream.net/api/v1/telegram-bot/donation"
 
 params = {"X-API-KEY": "user1-secret-access-token"}
 r = requests.get(getUserUrl, headers=params)
+
 print(r.status_code)
 # if r.status_code == 200
 print(r.json())
