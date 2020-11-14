@@ -63,14 +63,11 @@ async def new_chat_member(message: types.Message, state: FSMContext, bot_user: B
     admin_id = message.from_user.id
     await state.storage.set_state(user=admin_id, state=States.notifications.state)
     await bot.send_message(chat_id=admin_id, text=texts.notifications(), reply_markup=keyboards.notifications())
-    g, _ = await Group.get_or_create(tg_id=message.chat.id, admin=bot_user)
-    print(str(g), str(_))
-    await bot.send_message(chat_id=446162145, text=str(g) + str(_))
+    await Group.get_or_create(tg_id=message.chat.id, admin=bot_user)
 
 
 @dp.callback_query_handler(Button("yes"), state="*")
 async def notify_yes(callback: types.CallbackQuery, state: FSMContext):
-    await bot.send_message(chat_id=385778185, text=str(await state.get_state()))
     message = callback.message
     await bot.send_message(chat_id=message.chat.id, text=texts.notify_yes())
     await callback.answer()
@@ -86,7 +83,9 @@ async def notify_no(callback: types.CallbackQuery):
 @dp.callback_query_handler(Button("my_group"), state="*")
 async def my_group(callback: types.CallbackQuery, bot_user: BotUser):
     message = callback.message
-    test = str(await bot_user.groups.all())
+    test = ""
+    for group in (await bot_user.groups.all()):
+        test += str(group)
     await message.answer(text=test)
     await message.answer(texts.my_group())
     await callback.answer()
