@@ -15,6 +15,8 @@ class BotUser(Model):
 class Group(Model):
     tg_id = fields.BigIntField(default=0)
     admin = fields.ForeignKeyField("models.BotUser", "groups")
+    username = fields.CharField(max_length=255, default="")
+    donation_post = fields.TextField(default="")
 
     def __str__(self):
         return self.tg_id

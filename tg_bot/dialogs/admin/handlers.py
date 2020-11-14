@@ -1,8 +1,9 @@
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
-from aiogram.utils.deep_linking import get_start_link, decode_payload
+
 from aiogram.dispatcher.filters import CommandStart
+from aiogram.utils.deep_linking import decode_payload, get_start_link
 
 from ...db.models import BotUser, Group
 from ...load_all import dp, bot
@@ -83,12 +84,15 @@ async def notify_no(callback: types.CallbackQuery):
 @dp.callback_query_handler(Button("my_group"), state="*")
 async def my_group(callback: types.CallbackQuery, bot_user: BotUser):
     message = callback.message
-    test = ""
-    for group in (await bot_user.groups.all()):
-        test += str(group)
-    await message.answer(text=test)
-    await message.answer(texts.my_group())
+    await message.answer(texts.my_group(), keyboards.my_group())
     await callback.answer()
+
+
+@dp.callback_query_handler(Button("donation_post"), state="*")
+async def donation_post(callback: types.CallbackQuery, state: FSMContext,  bot_user: BotUser):
+    pass
+# TODO: @6a16ec начни уже хоть чёто делать. продолжи это флоу.
+# ссылка для доната: await get_start_link(group_id, True)
 
 
 @dp.message_handler(state="*")
