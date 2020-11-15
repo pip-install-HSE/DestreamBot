@@ -69,15 +69,21 @@ async def new_chat_member(message: types.Message, state: FSMContext, bot_user: B
 
 
 @dp.callback_query_handler(Button("yes"), state="*")
-async def notify_yes(callback: types.CallbackQuery, state: FSMContext):
+async def notify_yes(callback: types.CallbackQuery, state: FSMContext, bot_user: BotUser):
     message = callback.message
+    group = await bot_user.groups.first()
+    group.is_report_donations = True
+    group.save()
     await bot.send_message(chat_id=message.chat.id, text=texts.notify_yes())
     await callback.answer()
 
 
 @dp.callback_query_handler(Button("no"), state=States.notifications)
-async def notify_no(callback: types.CallbackQuery):
+async def notify_no(callback: types.CallbackQuery, state: FSMContext, bot_user: BotUser):
     message = callback.message
+    group = await bot_user.groups.first()
+    group.is_report_donations = False
+    group.save()
     await bot.send_message(chat_id=message.chat.id, text=texts.notify_no())
     await callback.answer()
 
