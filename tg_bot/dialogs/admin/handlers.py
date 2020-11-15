@@ -51,6 +51,7 @@ async def token(message: types.Message, state: FSMContext, bot_user: BotUser):
         await state.reset_state(with_data=False)
 
 
+
 @dp.callback_query_handler(Button("add_group"), state="*")
 async def add_group(callback: types.CallbackQuery, state: FSMContext):
     message = callback.message
@@ -90,9 +91,13 @@ async def my_group(callback: types.CallbackQuery, bot_user: BotUser):
 
 @dp.callback_query_handler(Button("donation_post"), state="*")
 async def donation_post(callback: types.CallbackQuery, state: FSMContext,  bot_user: BotUser):
-    pass
-# TODO: @6a16ec начни уже хоть чёто делать. продолжи это флоу.
-# ссылка для доната: await get_start_link(group_id, True)
+    message = callback.message
+    group_id = (await bot_user.groups.first()).tg_id
+    start_link = await get_start_link(group_id, True)
+    await message.answer(texts.donation_post, reply_markup=keyboards.donation_post)
+
+
+
 
 
 @dp.message_handler(state="*")

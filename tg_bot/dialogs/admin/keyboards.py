@@ -10,3 +10,4 @@ check_bot_is_admin = lambda: KeyboardInline([{_("Проверить"): "bot_is_a
 notifications= lambda: KeyboardInline([{_("Так точно"): "yes", _("Никак нет"): "no"}]).get()
 my_group = lambda: KeyboardInline([{_("Пост для донатов"): "donation_post"}, {_("Ссылка для доната"): "donation_link"},
                                    {_("Настройки группы"): "group_settings"}, {_("Назад"): "go_back"}]).get()
+donation_post = lambda: KeyboardInline([{_("Запостить"): "post_donation_post"}, {_("Изменить"): "change_donation_post"}]).get()
