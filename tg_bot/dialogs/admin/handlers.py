@@ -91,7 +91,7 @@ async def notify_no(callback: types.CallbackQuery, state: FSMContext, bot_user: 
 @dp.callback_query_handler(Button("my_group"), state="*")
 async def my_group(callback: types.CallbackQuery, bot_user: BotUser):
     message = callback.message
-    await message.answer(texts.my_group(), keyboards.my_group())
+    await message.answer(texts.my_group(), reply_markup=keyboards.my_group())
     await callback.answer()
 
 
