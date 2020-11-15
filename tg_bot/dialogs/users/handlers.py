@@ -56,7 +56,7 @@ async def subscriber_how_much_msg(message: types.Message, state: FSMContext):
             await message.answer(texts.sum_too_low_or_undefined())
 
 
-@dp.messsage_handler(state=States.message)
+@dp.message_handler(state=States.message)
 async def subscriber_message(message: types.Message, state: FSMContext):
     state_data = (await state.get_data())
     group_id = state_data.get("group_id")
