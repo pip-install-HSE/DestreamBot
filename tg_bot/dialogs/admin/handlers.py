@@ -98,7 +98,7 @@ async def my_group(callback: types.CallbackQuery, bot_user: BotUser):
 @dp.callback_query_handler(Button("donation_post"), state="*")
 async def donation_post(callback: types.CallbackQuery, state: FSMContext,  bot_user: BotUser):
     message = callback.message
-    group_id = (await bot_user.groups.first()).tg_id
+    group_id = (await bot_user.groups.all().first()).tg_id
     start_link = await get_start_link(group_id, True)
     await message.answer(texts.donation_post, reply_markup=keyboards.donation_post)
 
