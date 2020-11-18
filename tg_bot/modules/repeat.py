@@ -2,10 +2,10 @@ import asyncio
 from ..config import DONATION_CHECK_DELAY
 import pika
 from pika.exceptions import ChannelClosedByBroker
-from ..load_all import bot
 
 
 async def check_new_donations():
+    print("CHECKED", flush=True)
     try:
         pass
     except ChannelClosedByBroker:
