@@ -32,3 +32,5 @@ TORTOISE_ORM = {
         },
     },
 }
+
+DONATION_CHECK_DELAY = 10
