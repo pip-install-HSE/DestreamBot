@@ -1,3 +1,5 @@
+from typing import Dict
+
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters import CommandStart
@@ -25,7 +27,8 @@ async def subscriber_start_currency(message: types.Message, state: FSMContext, b
 @dp.callback_query_handler(state=States.how_much)
 async def subscriber_how_much(callback: types.CallbackQuery, state: FSMContext):
     await state.update_data({"currency": callback.data})
-    await callback.message.answer(texts.how_much())
+    group_admin = get_admin(await state.get_data())
+    await callback.message.answer(texts.how_much(group_admin['donationLimits']['']))
 
 
 def get_limit(donation_limits: list, currency: float):
@@ -35,19 +38,22 @@ def get_limit(donation_limits: list, currency: float):
     return False
 
 
+def get_admin(state_data: Dict):
+    group_id = state_data.get("group_id")
+    token = (await Group.get(tg_id=group_id)).admin.token
+    return await API(token).get.user()
+
+
 @dp.message_handler(state=States.how_much)
 async def subscriber_how_much_msg(message: types.Message, state: FSMContext):
     state_data = (await state.get_data())
-    group_id = state_data.get("group_id")
-    currency = state_data.get("currency")
-    token = (await Group.get(tg_id=group_id)).admin.token
-    group_admin = await API(token).get.user()
+    group_admin = get_admin(state_data)
     try:
         amount = float(message.text)
     except:
         await message.answer(texts.sum_too_low_or_undefined())
     else:
-        if ((limit := get_limit(group_admin['donationLimits'], currency))
+        if ((limit := get_limit(group_admin['donationLimits'], state_data.get("currency")))
                 and limit["maxAmount"] > amount > limit["minAmount"]):
             await state.update_data({"amount": amount})
             await message.answer(texts.message())
