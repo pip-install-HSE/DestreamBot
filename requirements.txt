@@ -1,5 +1,6 @@
 tortoise-orm
 asyncpg
+pika
 python-dotenv==0.13.0
 aiogram==2.8
 requests==2.23.0
