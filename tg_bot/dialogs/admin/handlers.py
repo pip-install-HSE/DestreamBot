@@ -103,9 +103,6 @@ async def donation_post(callback: types.CallbackQuery, state: FSMContext,  bot_u
     await message.answer(texts.donation_post, reply_markup=keyboards.donation_post)
 
 
-
-
-
 @dp.message_handler(state="*")
 async def any_message(message: types.Message):
     await message.answer(texts.any_message())

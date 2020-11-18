@@ -31,22 +31,22 @@ services:
       - ./aerich.ini:/code/aerich.ini
     restart: always
 # aerich init -t tg_bot.config.TORTOISE_ORM && aerich init-db && aerich migrate && aerich upgrade &&
-  celery:
-    container_name: celery
-    image: docker.pkg.github.com/pip-install-hse/destreambot/tg_bot:latest
-    working_dir: "/code/tg_bot"
-    command: celery -A adminka worker -l info
-    env_file:
-      - "./test.env"
-    depends_on:
-      - redis
-
-  celery-beat:
-    container_name: celery-beat
-    image: docker.pkg.github.com/pip-install-hse/destreambot/tg_bot:latest
-    working_dir: "/code/tg_bot"
-    command: sh -c "rm -rf celerybeat.pid && celery -A adminka beat -l info"
-    env_file:
-      - "./test.env"
-    depends_on:
-      - redis
+#  celery:
+#    container_name: celery
+#    image: docker.pkg.github.com/pip-install-hse/destreambot/tg_bot:latest
+#    working_dir: "/code/tg_bot"
+#    command: celery -A adminka worker -l info
+#    env_file:
+#      - "./test.env"
+#    depends_on:
+#      - redis
+#
+#  celery-beat:
+#    container_name: celery-beat
+#    image: docker.pkg.github.com/pip-install-hse/destreambot/tg_bot:latest
+#    working_dir: "/code/tg_bot"
+#    command: sh -c "rm -rf celerybeat.pid && celery -A adminka beat -l info"
+#    env_file:
+#      - "./test.env"
+#    depends_on:
+#      - redis

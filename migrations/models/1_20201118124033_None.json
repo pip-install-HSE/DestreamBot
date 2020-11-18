@@ -1,0 +1,5 @@
+{
+  "upgrade": [
+    "CREATE TABLE IF NOT EXISTS \"botuser\" (\n    \"id\" SERIAL NOT NULL PRIMARY KEY,\n    \"tg_id\" BIGINT NOT NULL  DEFAULT 0,\n    \"token\" VARCHAR(256) NOT NULL  DEFAULT '',\n    \"lang\" VARCHAR(2) NOT NULL  DEFAULT 'ru'\n);\nCREATE TABLE IF NOT EXISTS \"group\" (\n    \"id\" SERIAL NOT NULL PRIMARY KEY,\n    \"tg_id\" BIGINT NOT NULL  DEFAULT 0,\n    \"username\" VARCHAR(255) NOT NULL  DEFAULT '',\n    \"donation_post\" TEXT NOT NULL,\n    \"is_report_donations\" BOOL NOT NULL  DEFAULT True,\n    \"admin_id\" INT NOT NULL REFERENCES \"botuser\" (\"id\") ON DELETE CASCADE\n);\nCREATE TABLE IF NOT EXISTS \"aerich\" (\n    \"id\" SERIAL NOT NULL PRIMARY KEY,\n    \"version\" VARCHAR(255) NOT NULL,\n    \"app\" VARCHAR(20) NOT NULL,\n    \"content\" TEXT NOT NULL\n);"
+  ]
+}
