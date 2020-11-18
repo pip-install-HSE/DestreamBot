@@ -1,10 +1,15 @@
 import asyncio
 from ..config import DONATION_CHECK_DELAY
+import pika
+from pika.exceptions import ChannelClosedByBroker
 from ..load_all import bot
 
 
 async def check_new_donations():
-    await bot.send_message("446162145", "Bot is running!")
+    try:
+        pass
+    except ChannelClosedByBroker:
+        pass
 
 
 def repeat(coro, loop):
