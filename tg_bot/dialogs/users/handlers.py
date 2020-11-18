@@ -27,7 +27,7 @@ async def subscriber_start_currency(message: types.Message, state: FSMContext, b
 @dp.callback_query_handler(state=States.how_much)
 async def subscriber_how_much(callback: types.CallbackQuery, state: FSMContext):
     await state.update_data({"currency": callback.data})
-    group_admin = get_admin(await state.get_data())
+    group_admin = await get_admin(await state.get_data())
     await callback.message.answer(texts.how_much(group_admin['donationLimits']['']))
 
 
@@ -38,7 +38,7 @@ def get_limit(donation_limits: list, currency: float):
     return False
 
 
-def get_admin(state_data: Dict):
+async def get_admin(state_data: Dict):
     group_id = state_data.get("group_id")
     token = (await Group.get(tg_id=group_id)).admin.token
     return await API(token).get.user()
@@ -47,7 +47,7 @@ def get_admin(state_data: Dict):
 @dp.message_handler(state=States.how_much)
 async def subscriber_how_much_msg(message: types.Message, state: FSMContext):
     state_data = (await state.get_data())
-    group_admin = get_admin(state_data)
+    group_admin = await get_admin(state_data)
     try:
         amount = float(message.text)
     except:
