@@ -22,6 +22,11 @@ jobs:
           echo POSTGRES_PORT=${{ secrets.POSTGRES_PORT }} >> test.env
           echo REDIS_HOST=${{ secrets.REDIS_HOST }} >> test.env
           echo SERVER_HOST=${{ secrets.SERVER_HOST_TEST }} >> test.env
+          echo RABBIT_USER=${{ secrets.RABBIT_USER }} >> test.env
+          echo RABBIT_PASSWORD=${{ secrets.RABBIT_PASSWORD }} >> test.env
+          echo RABBIT_HOST=${{ secrets.RABBIT_HOST }} >> test.env
+          echo RABBIT_PORT=${{ secrets.RABBIT_PORT }} >> test.env
+          echo RABBIT_VIRTUAL_HOST=${{ secrets.RABBIT_VIRTUAL_HOST }} >> test.env
           echo TG_TOKEN=${{ secrets.TG_TOKEN_TEST }} >> test.env
           echo BOT_IMG=${{ secrets.BOT_IMG }} >> test.env
 
@@ -55,6 +60,11 @@ jobs:
           echo POSTGRES_PORT=${{ secrets.POSTGRES_PORT }} >> test.env
           echo REDIS_HOST=${{ secrets.REDIS_HOST }} >> test.env
           echo SERVER_HOST=${{ secrets.SERVER_HOST_TEST }} >> test.env
+          echo RABBIT_USER=${{ secrets.RABBIT_USER }} >> test.env
+          echo RABBIT_PASSWORD=${{ secrets.RABBIT_PASSWORD }} >> test.env
+          echo RABBIT_HOST=${{ secrets.RABBIT_HOST }} >> test.env
+          echo RABBIT_PORT=${{ secrets.RABBIT_PORT }} >> test.env
+          echo RABBIT_VIRTUAL_HOST=${{ secrets.RABBIT_VIRTUAL_HOST }} >> test.env
           echo TG_TOKEN=${{ secrets.TG_TOKEN_TEST }} >> test.env
           echo BOT_IMG=${{ secrets.BOT_IMG }} >> test.env
       - name: "deploy"
