@@ -27,6 +27,7 @@ jobs:
           echo RABBIT_HOST=${{ secrets.RABBIT_HOST }} >> test.env
           echo RABBIT_PORT=${{ secrets.RABBIT_PORT }} >> test.env
           echo RABBIT_VIRTUAL_HOST=${{ secrets.RABBIT_VIRTUAL_HOST }} >> test.env
+          echo RABBIT_QUEUE=${{ secrets.RABBIT_QUEUE }} >> test.env
           echo TG_TOKEN=${{ secrets.TG_TOKEN_TEST }} >> test.env
           echo BOT_IMG=${{ secrets.BOT_IMG }} >> test.env
 
@@ -65,6 +66,7 @@ jobs:
           echo RABBIT_HOST=${{ secrets.RABBIT_HOST }} >> test.env
           echo RABBIT_PORT=${{ secrets.RABBIT_PORT }} >> test.env
           echo RABBIT_VIRTUAL_HOST=${{ secrets.RABBIT_VIRTUAL_HOST }} >> test.env
+          echo RABBIT_QUEUE=${{ secrets.RABBIT_QUEUE }} >> test.env
           echo TG_TOKEN=${{ secrets.TG_TOKEN_TEST }} >> test.env
           echo BOT_IMG=${{ secrets.BOT_IMG }} >> test.env
       - name: "deploy"
