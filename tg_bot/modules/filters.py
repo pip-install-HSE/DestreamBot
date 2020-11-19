@@ -42,10 +42,10 @@ class IsUserSubscriber(CommandStart):
     async def check(self, message: Message) -> bool:
         from aiogram.utils.deep_linking import decode_payload
         check = await super().check(message)
-        group_ids = await Group.all().values("tg_id")
+        group_ids = [d['tg_id'] for d in await Group.all().values("tg_id")]
 
         if check:
-            payload = decode_payload(message.get_args()) if self.encoded else message.get_args()
+            payload = decode_payload(message.get_args())
             print(payload, group_ids, flush=True)
             return False if not (payload in group_ids) else {'group_id': payload}
         return check
