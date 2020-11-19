@@ -1,5 +1,6 @@
 import logging
 
+from aio_pika import connect
 from tortoise import Tortoise
 from aiogram import Bot
 from aiogram import Dispatcher
@@ -27,10 +28,13 @@ _ = i18n.gettext
 loop.run_until_complete(Tortoise.init(config=TORTOISE_ORM))
 
 # await Tortoise.generate_schemas()
-connection = None
-while connection is None:
-    try:
-        connection = pika.BlockingConnection(RABBIT_CONNECTION_PARAMS)
-    except:
-        continue
-channel = connection.channel()
+rabbit_connection = await connect(
+    host=RABBIT_HOST,
+    port=int(RABBIT_PORT),
+    virtualhost=RABBIT_VIRTUAL_HOST,
+    login=RABBIT_USER,
+    password=RABBIT_PASSWORD,
+    loop=loop
+)
+rabbit_channel = await rabbit_connection.channel()
+rabbit_donation_queue = await rabbit_channel.declare_queue(RABBIT_QUEUE, passive=True)

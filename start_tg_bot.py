@@ -2,8 +2,8 @@ import json
 from aiogram import executor
 from tortoise import Tortoise
 
-from tg_bot.load_all import bot, RABBIT_QUEUE, channel, loop
-from tg_bot.modules.repeat import process_donation
+from tg_bot.load_all import bot, rabbit_donation_queue
+from tg_bot.modules.donation import process_donation
 
 
 async def on_shutdown(dp):
@@ -16,12 +16,7 @@ async def on_shutdown(dp):
 async def on_startup(dp):
     await bot.send_message("446162145", "Bot is running!")
     await bot.send_message("385778185", "Bot is running!")
-    channel.queue_declare(queue=RABBIT_QUEUE, passive=True)
-
-    def callback(ch, method, properties, body):
-        loop.run_until_complete(process_donation(json.loads(body.decode("utf-8"))))
-    channel.basic_consume(queue=RABBIT_QUEUE, on_message_callback=callback)
-    channel.start_consuming()
+    await rabbit_donation_queue.consume(process_donation)
     # loop.call_later(DONATION_CHECK_DELAY, repeat, check_new_donations, loop)
 
 

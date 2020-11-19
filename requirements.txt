@@ -1,6 +1,6 @@
 tortoise-orm
 asyncpg
-pika
+aio_pika
 aerich
 python-dotenv==0.13.0
 aiogram==2.8
