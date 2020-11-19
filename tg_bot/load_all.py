@@ -30,6 +30,7 @@ loop.run_until_complete(Tortoise.init(config=TORTOISE_ORM))
 # connection = None
 # while connection is None:
 #     try:
+
 connection = pika.BlockingConnection(RABBIT_CONNECTION_PARAMS)
 # except:
 #     pass
