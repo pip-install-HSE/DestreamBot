@@ -3,7 +3,7 @@ import pika
 import json
 import logging
 from ..config import DONATION_CHECK_DELAY, RABBIT_CONNECTION_PARAMS
-from ..load_all import connection, channel, bot, dp
+from ..load_all import bot, dp
 from ..db.models import BotUser, Group
 from ..dialogs.admin import texts
 
