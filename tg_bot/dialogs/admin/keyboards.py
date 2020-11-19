@@ -12,3 +12,5 @@ notifications= lambda: KeyboardInline([{_("Так точно"): "notify_yes", _(
 my_group = lambda: KeyboardInline([{_("Пост для донатов"): "donation_post"}, {_("Ссылка для доната"): "donation_link"},
                                    {_("Настройки группы"): "group_settings"}, {_("Назад"): "go_back"}]).get()
 donation_post = lambda: KeyboardInline([{_("Запостить"): "post_donation_post"}, {_("Изменить"): "change_donation_post"}]).get()
+post_donation_post = lambda: KeyboardInline([{_("К группе"): "my_group"}]).get()
+group_donation_post = lambda url: KeyboardInline([{_("Задонатить"): f"url:{url}"}]).get()

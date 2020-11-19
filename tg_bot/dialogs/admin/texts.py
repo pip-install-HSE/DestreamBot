@@ -15,7 +15,10 @@ before_access__add_group = lambda: _("Перед тем, как пытаться
 
 my_group = lambda group_username, min_sum: f"<b>{group_username}</b>\n\n" + _("Помни о том, что среди твоих подписчиков могут оказаться модераторы\n\n") + f"{min_sum}"
 any_message = lambda: _("Отправьте /start для начала работы с ботом")
-donation_post = lambda: _("Вот Ваш пост")
+donation_post = lambda post: _("Вот Ваш пост:\n\n") + post
+
+set_donation_post = lambda: _("Отправьте мне текст поста.")
+post_donation_post = lambda: _("Мы запостили ваш пост в группу!")
 
 new_donation = lambda d: \
     f"{d['sender']}"+_(" сделал донат на сумму ") + f"{d['amount']} {d['currency']}" + _(" и написал текст: ") + f"{d['message']}"

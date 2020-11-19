@@ -17,6 +17,7 @@ class States(StatesGroup):
     token = State()
     add_group = State()
     notifications = State()
+    change_donation_post = State()
 
 
 @dp.message_handler(CommandStart(deep_link=""), state="*")
@@ -97,6 +98,7 @@ async def notify_no(callback: types.CallbackQuery, state: FSMContext, bot_user: 
     message = callback.message
     await bot_user.groups.all().order_by("-id").first().update(is_report_donations=False)
     await bot.send_message(chat_id=message.chat.id, text=texts.notify_no())
+    await state.reset_state(with_data=False)
     await callback.answer()
 
 
@@ -118,9 +120,28 @@ async def my_group(callback: types.CallbackQuery, bot_user: BotUser):
 @dp.callback_query_handler(Button("donation_post"), state="*")
 async def donation_post(callback: types.CallbackQuery, state: FSMContext,  bot_user: BotUser):
     message = callback.message
-    group_id = (await bot_user.groups.all().order_by("-id").first()).tg_id
-    start_link = await get_start_link(group_id, True)
-    await message.answer(texts.donation_post, reply_markup=keyboards.donation_post)
+    group = await bot_user.groups.all().order_by("-id").first()
+    await message.answer(texts.donation_post(group.donation_post), reply_markup=keyboards.donation_post())
+
+
+@dp.callback_query_handler(Button("change_donation_post"), state="*")
+async def change_donation_post(callback: types.CallbackQuery):
+    await callback.message.answer(texts.set_donation_post())
+
+
+@dp.message_handler(state=States.change_donation_post)
+async def real_change_donation_post(message: types.Message, state: FSMContext, bot_user: BotUser):
+    await bot_user.groups.all().order_by("-id").first().update(donation_post=message.text)
+    await message.answer(texts.donation_post(message.text), reply_markup=keyboards.donation_post())
+    await state.reset_state(with_data=False)
+
+
+@dp.callback_query_handler(Button("post_donation_post"), state="*")
+async def change_donation_post(callback: types.CallbackQuery, bot_user: BotUser):
+    group = await bot_user.groups.all().order_by("-id").first()
+    start_link = await get_start_link(group.tg_id, True)
+    await bot.send_message(chat_id=group.tg_id, text=group.donation_post, reply_markup=keyboards.group_donation_post(start_link))
+    await callback.message.answer(texts.post_donation_post(), reply_markup=keyboards.post_donation_post())
 
 
 @dp.message_handler(state="*")
