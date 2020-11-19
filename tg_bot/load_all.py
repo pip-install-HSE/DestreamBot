@@ -24,4 +24,7 @@ i18n.reload()
 _ = i18n.gettext
 
 loop.run_until_complete(Tortoise.init(config=TORTOISE_ORM))
+
+connection = pika.BlockingConnection(RABBIT_CONNECTION_PARAMS)
+channel = connection.channel()
 # await Tortoise.generate_schemas()

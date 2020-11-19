@@ -2,15 +2,14 @@ import asyncio
 import pika
 import json
 import logging
-from ..config import DONATION_CHECK_DELAY, RABBIT_CONNECTION_PARAMS
+from ..config import DONATION_CHECK_DELAY
+from ..load_all import connection, channel
 from aiogram import Bot, Dispatcher
 from ..db.models import BotUser, Group
 from ..dialogs.admin import texts
 
 
 async def check_new_donations(bot: Bot, dp: Dispatcher):
-    connection = pika.BlockingConnection(RABBIT_CONNECTION_PARAMS)
-    channel = connection.channel()
     queue_from = 'telegram-donations'
 
     cnt = None
@@ -41,8 +40,6 @@ async def check_new_donations(bot: Bot, dp: Dispatcher):
                                 await bot.send_message(chat_id=don["additionalParameters"]["group_id"],
                                                        text=texts.new_donation(don))
                 await dp.storage.update_data(chat="static_var", data={"telegram-donations@last_messages_count": cnt})
-    channel.close()
-    connection.close()
 
 # x = {
 #  'currency': 'RUB', 'amount': 1100.0,

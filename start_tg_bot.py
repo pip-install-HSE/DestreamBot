@@ -3,7 +3,7 @@ import os
 from aiogram import executor
 from tortoise import Tortoise
 
-from tg_bot.load_all import bot, loop, DONATION_CHECK_DELAY
+from tg_bot.load_all import bot, loop, DONATION_CHECK_DELAY, connection, channel
 from tg_bot.modules.repeat import repeat, check_new_donations
 
 
@@ -12,6 +12,8 @@ async def on_shutdown(dp):
     await dp.storage.close()
     await dp.storage.wait_closed()
     await Tortoise.close_connections()
+    channel.close()
+    connection.close()
 
 
 async def on_startup(dp):
