@@ -1,6 +1,5 @@
 import logging
 
-import pika as pika
 from tortoise import Tortoise
 from aiogram import Bot
 from aiogram import Dispatcher
@@ -27,12 +26,4 @@ _ = i18n.gettext
 
 loop.run_until_complete(Tortoise.init(config=TORTOISE_ORM))
 
-# connection = None
-# while connection is None:
-#     try:
-
-connection = pika.BlockingConnection(RABBIT_CONNECTION_PARAMS)
-# except:
-#     pass
-channel = connection.channel()
 # await Tortoise.generate_schemas()

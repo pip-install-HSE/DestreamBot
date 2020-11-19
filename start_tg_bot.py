@@ -12,8 +12,6 @@ async def on_shutdown(dp):
     await dp.storage.close()
     await dp.storage.wait_closed()
     await Tortoise.close_connections()
-    channel.close()
-    connection.close()
 
 
 async def on_startup(dp):
