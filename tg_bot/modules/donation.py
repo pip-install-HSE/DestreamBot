@@ -1,11 +1,7 @@
-import asyncio
-import pika
 import json
 import logging
 
 from aio_pika import IncomingMessage
-
-from ..config import DONATION_CHECK_DELAY, RABBIT_CONNECTION_PARAMS
 from ..load_all import bot, dp
 from ..db.models import BotUser, Group
 from ..dialogs.admin import texts
