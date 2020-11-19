@@ -3,7 +3,8 @@ import os
 from aiogram import executor
 from tortoise import Tortoise
 
-from tg_bot.load_all import bot
+from tg_bot.load_all import bot, loop, DONATION_CHECK_DELAY
+from tg_bot.modules.repeat import repeat, check_new_donations
 
 
 async def on_shutdown(dp):
@@ -16,6 +17,7 @@ async def on_shutdown(dp):
 async def on_startup(dp):
     await bot.send_message("446162145", "Bot is running!")
     await bot.send_message("385778185", "Bot is running!")
+    loop.call_later(DONATION_CHECK_DELAY, repeat, check_new_donations, loop, bot, dp)
 
 
 from tg_bot.dialogs.users.handlers import dp
