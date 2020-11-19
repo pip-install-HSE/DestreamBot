@@ -57,7 +57,7 @@ class MethodsPOST(Methods):
             "message": message,
             "additionalParameters": additional_parameters
         }
-        await self.post(url=url, headers=headers, json=body)
+        return await self.post(url=url, headers=headers, json=body)
 
 
 class API:
