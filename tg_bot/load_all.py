@@ -27,3 +27,10 @@ _ = i18n.gettext
 loop.run_until_complete(Tortoise.init(config=TORTOISE_ORM))
 
 # await Tortoise.generate_schemas()
+connection = None
+while connection is None:
+    try:
+        connection = pika.BlockingConnection(RABBIT_CONNECTION_PARAMS)
+    except:
+        continue
+channel = connection.channel()

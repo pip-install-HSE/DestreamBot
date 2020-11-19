@@ -40,6 +40,7 @@ RABBIT_PASSWORD = re.sub(r"[\d]{2}", "$", envs.get("RABBIT_PASSWORD"))
 RABBIT_HOST = envs.get("RABBIT_HOST")
 RABBIT_PORT = envs.get("RABBIT_PORT")
 RABBIT_VIRTUAL_HOST = envs.get("RABBIT_VIRTUAL_HOST")
+RABBIT_QUEUE = envs.get("RABBIT_QUEUE")
 
 DONATION_CHECK_DELAY = 10
 
@@ -50,3 +51,4 @@ RABBIT_CONNECTION_PARAMS = pika.ConnectionParameters(host=RABBIT_HOST,
                                                      virtual_host=RABBIT_VIRTUAL_HOST,
                                                      credentials=RABBIT_CONNECTION_CREDENTIALS,
                                                      socket_timeout=5)
+
