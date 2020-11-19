@@ -100,7 +100,7 @@ async def notify_no(callback: types.CallbackQuery, state: FSMContext, bot_user: 
     await callback.answer()
 
 
-def get_min_sum(group: Group):
+async def get_min_sum(group: Group):
     x = (await API(group.admin.token).get.user())["donationLimits"]
     return "\n".join(f"От {i['minAmount']} до {i['maxAmount']} {i['currency']}" for i in x)
 
@@ -109,7 +109,7 @@ def get_min_sum(group: Group):
 async def my_group(callback: types.CallbackQuery, bot_user: BotUser):
     message = callback.message
     if group := await bot_user.groups.all().order_by("-id").first():
-        await message.answer(texts.my_group(group.username, get_min_sum(group)), reply_markup=keyboards.my_group())
+        await message.answer(texts.my_group(group.username, await get_min_sum(group)), reply_markup=keyboards.my_group())
         await callback.answer()
     else:
         await callback.answer(texts.before_access__add_group())
