@@ -127,6 +127,8 @@ async def donation_post(callback: types.CallbackQuery, state: FSMContext,  bot_u
 @dp.callback_query_handler(Button("change_donation_post"), state="*")
 async def change_donation_post(callback: types.CallbackQuery):
     await callback.message.answer(texts.set_donation_post())
+    await States.change_donation_post.set()
+    await callback.answer()
 
 
 @dp.message_handler(state=States.change_donation_post)
@@ -142,6 +144,7 @@ async def change_donation_post(callback: types.CallbackQuery, bot_user: BotUser)
     start_link = await get_start_link(group.tg_id, True)
     await bot.send_message(chat_id=group.tg_id, text=group.donation_post, reply_markup=keyboards.group_donation_post(start_link))
     await callback.message.answer(texts.post_donation_post(), reply_markup=keyboards.post_donation_post())
+    await callback.answer()
 
 
 @dp.message_handler(state="*")
