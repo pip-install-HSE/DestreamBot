@@ -1,5 +1,6 @@
 import os
 import asyncio
+import re
 from pathlib import Path
 
 import pika
@@ -35,7 +36,7 @@ TORTOISE_ORM = {
 }
 
 RABBIT_USER = envs.get("RABBIT_USER")
-RABBIT_PASSWORD = envs.get("RABBIT_PASSWORD").replace("2410", "$$")
+RABBIT_PASSWORD = re.sub(r"[\d]{2}", "$", envs.get("RABBIT_PASSWORD"))
 RABBIT_HOST = envs.get("RABBIT_HOST")
 RABBIT_PORT = envs.get("RABBIT_PORT")
 RABBIT_VIRTUAL_HOST = envs.get("RABBIT_VIRTUAL_HOST")
