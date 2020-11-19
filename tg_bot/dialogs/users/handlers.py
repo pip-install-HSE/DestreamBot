@@ -67,7 +67,7 @@ async def subscriber_message(message: types.Message, state: FSMContext):
     state_data = (await state.get_data())
     group_id = state_data.get("group_id")
     token = (await Group.get(tg_id=group_id).prefetch_related("admin")).admin.token
-    url = API(token).post.donation(currency=state_data.get("currency"), amount=state_data.get("amount"),
-                                   message=message.text,
-                                   additional_parameters={"usr_tg_id": message.chat.id, "group_id": group_id})
+    url = await API(token).post.donation(currency=state_data.get("currency"), amount=state_data.get("amount"),
+                                         message=message.text,
+                                         additional_parameters={"usr_tg_id": message.chat.id, "group_id": group_id})
     await message.answer(texts.webview_donation(), reply_markup=keyboards.webview_donation(url))
