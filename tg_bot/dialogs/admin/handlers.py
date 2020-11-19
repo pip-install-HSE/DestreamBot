@@ -103,13 +103,11 @@ async def notify_no(callback: types.CallbackQuery, state: FSMContext, bot_user: 
 @dp.callback_query_handler(Button("my_group"), state="*")
 async def my_group(callback: types.CallbackQuery, bot_user: BotUser):
     message = callback.message
-    try:
-        group = await bot_user.groups.all().order_by("-id").first()
-    except DoesNotExist:
-        await callback.answer(texts.before_access__add_group())
-    else:
+    if group := await bot_user.groups.all().order_by("-id").first():
         await message.answer(texts.my_group(group.username), reply_markup=keyboards.my_group())
         await callback.answer()
+    else:
+        await callback.answer(texts.before_access__add_group())
 
 
 @dp.callback_query_handler(Button("donation_post"), state="*")

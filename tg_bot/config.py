@@ -2,6 +2,7 @@ import os
 import asyncio
 from pathlib import Path
 
+import pika
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -40,3 +41,10 @@ RABBIT_PORT = envs.get("RABBIT_PORT")
 RABBIT_VIRTUAL_HOST = envs.get("RABBIT_VIRTUAL_HOST")
 
 DONATION_CHECK_DELAY = 10
+
+RABBIT_CONNECTION_CREDENTIALS = pika.PlainCredentials(RABBIT_USER, RABBIT_PASSWORD)
+RABBIT_CONNECTION_PARAMS = pika.ConnectionParameters(host=RABBIT_HOST,
+                                                     port=int(RABBIT_PORT),
+                                                     virtual_host=RABBIT_VIRTUAL_HOST,
+                                                     credentials=RABBIT_CONNECTION_CREDENTIALS,
+                                                     socket_timeout=5)

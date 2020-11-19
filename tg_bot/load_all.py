@@ -25,5 +25,5 @@ i18n.reload()
 _ = i18n.gettext
 
 loop.run_until_complete(Tortoise.init(config=TORTOISE_ORM))
-loop.call_later(DONATION_CHECK_DELAY, repeat, check_new_donations, loop)
+loop.call_later(DONATION_CHECK_DELAY, repeat, check_new_donations, loop, bot)
 # await Tortoise.generate_schemas()
