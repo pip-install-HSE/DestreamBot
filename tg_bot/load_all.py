@@ -28,13 +28,13 @@ _ = i18n.gettext
 loop.run_until_complete(Tortoise.init(config=TORTOISE_ORM))
 
 # await Tortoise.generate_schemas()
-rabbit_connection = await connect(
+rabbit_connection = loop.run_until_complete(connect(
     host=RABBIT_HOST,
     port=int(RABBIT_PORT),
     virtualhost=RABBIT_VIRTUAL_HOST,
     login=RABBIT_USER,
     password=RABBIT_PASSWORD,
     loop=loop
-)
-rabbit_channel = await rabbit_connection.channel()
-rabbit_donation_queue = await rabbit_channel.declare_queue(RABBIT_QUEUE, passive=True)
+))
+rabbit_channel = loop.run_until_complete(rabbit_connection.channel())
+rabbit_donation_queue = loop.run_until_complete(rabbit_channel.declare_queue(RABBIT_QUEUE, passive=True))
