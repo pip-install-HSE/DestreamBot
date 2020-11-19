@@ -3,12 +3,12 @@ import pika
 import json
 import logging
 from ..config import DONATION_CHECK_DELAY, RABBIT_CONNECTION_PARAMS
-from tg_bot.load_all import storage
+from aiogram import Bot, Dispatcher
 from ..db.models import BotUser, Group
 from ..dialogs.admin import texts
 
 
-async def check_new_donations(bot):
+async def check_new_donations(bot: Bot, dp: Dispatcher):
     connection = pika.BlockingConnection(RABBIT_CONNECTION_PARAMS)
     channel = connection.channel()
     queue_from = 'telegram-donations'
@@ -21,7 +21,7 @@ async def check_new_donations(bot):
             pass
         else:
             if cnt:
-                last_msgs_c = (await storage.get_data("static_var")).get("telegram-donations@last_messages_count")
+                last_msgs_c = (await dp.storage.get_data(chat="static_var")).get("telegram-donations@last_messages_count")
                 last_msgs_c = last_msgs_c if last_msgs_c else 0
                 for i in range(cnt - last_msgs_c):
                     don = json.loads(channel.basic_get(queue_from)[2].decode("utf-8"))
@@ -40,7 +40,7 @@ async def check_new_donations(bot):
                             if group.is_report_donations:
                                 await bot.send_message(chat_id=don["additionalParameters"]["group_id"],
                                                        text=texts.new_donation(don))
-                await storage.update_data("static_var", data={"telegram-donations@last_messages_count": cnt})
+                await dp.storage.update_data(chat="static_var", data={"telegram-donations@last_messages_count": cnt})
     channel.close()
     connection.close()
 
@@ -52,6 +52,6 @@ async def check_new_donations(bot):
 # }
 
 
-def repeat(coro, loop, bot):
-    asyncio.ensure_future(coro(bot), loop=loop)
-    loop.call_later(DONATION_CHECK_DELAY, repeat, coro, loop, bot)
+def repeat(coro, loop, bot, dp):
+    asyncio.ensure_future(coro(bot, dp), loop=loop)
+    loop.call_later(DONATION_CHECK_DELAY, repeat, coro, loop, bot, dp)
