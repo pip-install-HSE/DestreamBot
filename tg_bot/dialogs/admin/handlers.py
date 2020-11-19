@@ -147,7 +147,7 @@ async def change_donation_post(callback: types.CallbackQuery, bot_user: BotUser)
     await callback.answer()
 
 
-@dp.message_handler(not CommandStart(), state="*")
+@dp.message_handler(lambda message: message.text != "/start", state="*")
 async def any_message(message: types.Message):
     await message.answer(texts.any_message())
 # @dp.callback_query_handler(Button("add_group"), state="*"):
