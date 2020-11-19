@@ -108,7 +108,7 @@ async def get_min_sum(group: Group):
 @dp.callback_query_handler(Button("my_group"), state="*")
 async def my_group(callback: types.CallbackQuery, bot_user: BotUser):
     message = callback.message
-    if group := await bot_user.groups.all().order_by("-id").first():
+    if group := await bot_user.groups.all().order_by("-id").prefetch_related("admin").first():
         await message.answer(texts.my_group(group.username, await get_min_sum(group)), reply_markup=keyboards.my_group())
         await callback.answer()
     else:

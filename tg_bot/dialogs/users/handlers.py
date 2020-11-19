@@ -39,7 +39,7 @@ def get_limit(donation_limits: list, currency: float):
 
 
 async def get_admin(group_id: [str, int]):
-    token = (await Group.get(tg_id=group_id)).admin.token
+    token = (await Group.get(tg_id=group_id).prefetch_related("admin")).admin.token
     return await API(token).get.user()
 
 
