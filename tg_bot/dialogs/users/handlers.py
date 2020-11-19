@@ -66,9 +66,11 @@ async def subscriber_how_much_msg(message: types.Message, state: FSMContext):
 async def subscriber_message(message: types.Message, state: FSMContext):
     state_data = (await state.get_data())
     group_id = state_data.get("group_id")
-    token = (await Group.get(tg_id=group_id).prefetch_related("admin")).admin.token
-    response = await API(token).post.donation(currency=state_data.get("currency"), amount=state_data.get("amount"),
-                                              message=message.text,
-                                              additional_parameters={"admin_tg_id": message.chat.id,
-                                                                     "group_id": group_id})
+    group = (await Group.get(tg_id=group_id).prefetch_related("admin"))
+    response = await API(group.admin.token).post.donation(currency=state_data.get("currency"),
+                                                          amount=state_data.get("amount"),
+                                                          message=message.text,
+                                                          additional_parameters={"admin_tg_id": group.admin.tg_id,
+                                                                                 "group_id": group_id})
     await message.answer(texts.webview_donation(), reply_markup=keyboards.webview_donation(response['donationUrl']))
+    await state.reset_state(with_data=False)
