@@ -1,4 +1,6 @@
 import logging
+
+import pika as pika
 from tortoise import Tortoise
 from aiogram import Bot
 from aiogram import Dispatcher

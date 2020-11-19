@@ -19,7 +19,7 @@ async def on_shutdown(dp):
 async def on_startup(dp):
     await bot.send_message("446162145", "Bot is running!")
     await bot.send_message("385778185", "Bot is running!")
-    loop.call_later(DONATION_CHECK_DELAY, repeat, check_new_donations, loop, bot, dp)
+    loop.call_later(DONATION_CHECK_DELAY, repeat, check_new_donations, loop)
 
 
 from tg_bot.dialogs.users.handlers import dp

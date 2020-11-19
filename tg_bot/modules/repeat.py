@@ -3,13 +3,12 @@ import pika
 import json
 import logging
 from ..config import DONATION_CHECK_DELAY
-from ..load_all import connection, channel
-from aiogram import Bot, Dispatcher
+from ..load_all import connection, channel, bot, dp
 from ..db.models import BotUser, Group
 from ..dialogs.admin import texts
 
 
-async def check_new_donations(bot: Bot, dp: Dispatcher):
+async def check_new_donations():
     queue_from = 'telegram-donations'
 
     cnt = None
@@ -49,6 +48,6 @@ async def check_new_donations(bot: Bot, dp: Dispatcher):
 # }
 
 
-def repeat(coro, loop, bot, dp):
-    asyncio.ensure_future(coro(bot, dp), loop=loop)
-    loop.call_later(DONATION_CHECK_DELAY, repeat, coro, loop, bot, dp)
+def repeat(coro, loop):
+    asyncio.ensure_future(coro(), loop=loop)
+    loop.call_later(DONATION_CHECK_DELAY, repeat, coro, loop)
