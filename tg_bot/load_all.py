@@ -8,7 +8,6 @@ from aiogram.contrib.middlewares.logging import LoggingMiddleware
 from .modules.languages_middelware import setup_middleware
 from .modules.middlewares import GetUserMiddleware
 from .config import *
-from .modules.repeat import repeat, check_new_donations
 
 
 storage = RedisStorage2(host=REDIS_HOST)
