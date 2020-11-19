@@ -46,5 +46,6 @@ class IsUserSubscriber(CommandStart):
 
         if check:
             payload = decode_payload(message.get_args()) if self.encoded else message.get_args()
+            print(payload, group_ids, flush=True)
             return False if not (payload in group_ids) else {'group_id': payload}
         return check
