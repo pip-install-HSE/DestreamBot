@@ -3,7 +3,7 @@ import os
 from aiogram import executor
 from tortoise import Tortoise
 
-from tg_bot.load_all import bot, loop, DONATION_CHECK_DELAY, connection, channel
+from tg_bot.load_all import bot, loop, DONATION_CHECK_DELAY
 from tg_bot.modules.repeat import repeat, check_new_donations
 
 
