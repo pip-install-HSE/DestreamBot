@@ -37,6 +37,7 @@ async def subscriber_how_much(callback: types.CallbackQuery, state: FSMContext):
     group_admin = await get_admin((await state.get_data()).get("group_id"))
     limit = get_limit(group_admin['donationLimits'], callback.data)
     await callback.message.answer(texts.how_much(f"{limit['minAmount']} {limit['currency']}", f"{limit['maxAmount']} {limit['currency']}"))
+    await callback.answer()
 
 
 async def get_admin(group_id: [str, int]):
