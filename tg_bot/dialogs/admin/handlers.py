@@ -38,6 +38,7 @@ async def menu(message: types.Message, user: dict):
 @dp.callback_query_handler(Button("menu"))
 async def callback_menu(callback: types.CallbackQuery, bot_user: BotUser):
     await menu(callback.message, await API(bot_user.token).get.user())
+    await callback.answer()
 
 
 @dp.message_handler(state=States.token)
@@ -67,6 +68,7 @@ async def new_chat_member(message: types.Message, state: FSMContext, bot_user: B
     await state.storage.set_state(user=admin_id, state=States.notifications.state)
     await bot.send_message(chat_id=admin_id, text=texts.established_as_admin(), reply_markup=keyboards.established_as_admin())
     group, _ = await Group.get_or_create(admin=bot_user)
+    group.username = message.chat.username
     group.tg_id = message.chat.id
     await group.save()
 
@@ -122,6 +124,7 @@ async def donation_post(callback: types.CallbackQuery, state: FSMContext,  bot_u
     message = callback.message
     group = await bot_user.groups.all().order_by("-id").first()
     await message.answer(texts.donation_post(group.donation_post), reply_markup=keyboards.donation_post())
+    await callback.answer()
 
 
 @dp.callback_query_handler(Button("change_donation_post"), state="*")
@@ -145,6 +148,11 @@ async def change_donation_post(callback: types.CallbackQuery, bot_user: BotUser)
     await bot.send_message(chat_id=group.tg_id, text=group.donation_post, reply_markup=keyboards.group_donation_post(start_link))
     await callback.message.answer(texts.post_donation_post(), reply_markup=keyboards.post_donation_post())
     await callback.answer()
+
+
+@dp.callback_query_handler(state="*")
+async def any_callback(callback: types.CallbackQuery):
+    await callback.answer(texts.maintance())
 
 
 @dp.message_handler(lambda message: "/start" not in message.text, state="*")
