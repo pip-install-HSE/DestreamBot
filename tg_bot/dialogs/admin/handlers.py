@@ -20,7 +20,7 @@ class States(StatesGroup):
     change_donation_post = State()
 
 
-@dp.message_handler(CommandStart(deep_link="") and IsItNotGroup(), state="*")
+@dp.message_handler(CommandStart(deep_link=""), IsItNotGroup(), state="*")
 async def bot_user_start(message: types.Message, state: FSMContext, bot_user: BotUser):
     if not bot_user.token:
         await States.token.set()
@@ -155,7 +155,7 @@ async def any_callback(callback: types.CallbackQuery):
     await callback.answer(texts.maintenance())
 
 
-@dp.message_handler(lambda message: "/start" not in message.text and IsItNotGroup(), state="*")
+@dp.message_handler(lambda message: "/start" not in message.text, IsItNotGroup(), state="*")
 async def any_message(message: types.Message):
     await message.answer(texts.any_message())
 # @dp.callback_query_handler(Button("add_group"), state="*"):
