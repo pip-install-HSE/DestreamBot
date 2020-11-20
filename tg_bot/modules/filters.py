@@ -13,10 +13,10 @@ class Button(BoundFilter):
         self.work_in_group = work_in_group
 
     async def check(self, message: Message) -> bool:
-        if not self.work_in_group:
-            res = await isItNotGroup(message)
-            if not res:
-                return False
+        # if not self.work_in_group:
+        #     res = await isItNotGroup(message)
+        #     if not res:
+        #         return False
 
         if isinstance(message, Message):
             if self.contains:
