@@ -66,6 +66,6 @@ class IsItNotGroup(BoundFilter):
 
 async def isItNotGroup(message_or_call: [Message, CallbackQuery]) -> bool:
     if isinstance(message_or_call, Message):
-        return message_or_call.chat.id != message_or_call.from_user.id
+        return message_or_call.chat.id == message_or_call.from_user.id
     elif isinstance(message_or_call, CallbackQuery):
-        return message_or_call.message.chat.id != message_or_call.message.from_user.id
+        return message_or_call.message.chat.id == message_or_call.message.from_user.id
