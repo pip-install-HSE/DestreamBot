@@ -35,7 +35,7 @@ async def menu(message: types.Message, user: dict):
         reply_markup=keyboards.main_menu())
 
 
-@dp.callback_query_handler(Button("menu"))
+@dp.callback_query_handler(Button("menu"), state="*")
 async def callback_menu(callback: types.CallbackQuery, bot_user: BotUser):
     await menu(callback.message, await API(bot_user.token).get.user())
     await callback.answer()
