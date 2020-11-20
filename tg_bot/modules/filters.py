@@ -13,12 +13,6 @@ class Button(BoundFilter):
         self.work_in_group = work_in_group
 
     async def check(self, message: Message) -> bool:
-        # await bot.send_message(chat_id=385778185, text=str((await bot.get_me()).id))
-        # if not self.work_in_group:
-        #     res = await isItNotGroup(message)
-        #     if not res:
-        #         return False
-
         if isinstance(message, Message):
             if self.contains:
                 return self.key in message.text
@@ -39,7 +33,6 @@ class IsBotNewChatMember(BoundFilter):
         if members := message.__getattribute__("new_chat_members"):
             for member in members:
                 flag = True if member.id == (await bot.get_me()).id else flag
-            # await bot.send_message(chat_id=385778185, text=str(members))
         return flag
 
 
@@ -62,12 +55,7 @@ class IsUserSubscriber(CommandStart):
 class IsItNotGroup(BoundFilter):
 
     async def check(self, message_or_call: [Message, CallbackQuery]) -> bool:
-        res = await isItNotGroup(message_or_call)
-        return res
-
-
-async def isItNotGroup(message_or_call: [Message, CallbackQuery]) -> bool:
-    if isinstance(message_or_call, Message):
-        return message_or_call.chat.id == message_or_call.from_user.id
-    elif isinstance(message_or_call, CallbackQuery):
-        return message_or_call.message.chat.id == message_or_call.message.from_user.id
+        if isinstance(message_or_call, Message):
+            return message_or_call.chat.id == message_or_call.from_user.id
+        elif isinstance(message_or_call, CallbackQuery):
+            return message_or_call.message.chat.id == message_or_call.message.from_user.id
