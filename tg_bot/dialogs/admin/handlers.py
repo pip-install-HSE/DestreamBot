@@ -150,7 +150,7 @@ async def change_donation_post(callback: types.CallbackQuery, bot_user: BotUser)
     await callback.answer()
 
 
-@dp.callback_query_handler(IsItNotGroup(), state="*")
+@dp.callback_query_handler(state="*")
 async def any_callback(callback: types.CallbackQuery):
     await callback.answer(texts.maintenance())
 
