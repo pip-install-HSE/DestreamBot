@@ -152,7 +152,7 @@ async def change_donation_post(callback: types.CallbackQuery, bot_user: BotUser)
 
 @dp.callback_query_handler(state="*")
 async def any_callback(callback: types.CallbackQuery):
-    await callback.answer(texts.maintance())
+    await callback.answer(texts.maintenance())
 
 
 @dp.message_handler(lambda message: "/start" not in message.text, state="*")
