@@ -7,11 +7,17 @@ from ..load_all import bot
 
 
 class Button(BoundFilter):
-    def __init__(self, key, contains=False):
+    def __init__(self, key, contains=False, work_in_group=False):
         self.key = key
         self.contains = contains
+        self.work_in_group = work_in_group
 
-    async def check(self, message) -> bool:
+    async def check(self, message: Message) -> bool:
+        if not self.work_in_group:
+            res = await isItNotGroup(message)
+            if not res:
+                return False
+
         if isinstance(message, Message):
             if self.contains:
                 return self.key in message.text
@@ -54,8 +60,12 @@ class IsUserSubscriber(CommandStart):
 class IsItNotGroup(BoundFilter):
 
     async def check(self, message_or_call: [Message, CallbackQuery]) -> bool:
-        if isinstance(message_or_call, Message):
-            return message_or_call.chat.id == message_or_call.from_user.id
-        elif isinstance(message_or_call, CallbackQuery):
-            return message_or_call.message.chat.id == message_or_call.message.from_user.id
+        res = await isItNotGroup(message_or_call)
+        return res
 
+
+async def isItNotGroup(message_or_call: [Message, CallbackQuery]) -> bool:
+    if isinstance(message_or_call, Message):
+        return message_or_call.chat.id != message_or_call.from_user.id
+    elif isinstance(message_or_call, CallbackQuery):
+        return message_or_call.message.chat.id != message_or_call.message.from_user.id

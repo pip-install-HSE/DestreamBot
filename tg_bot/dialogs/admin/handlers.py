@@ -10,7 +10,7 @@ from ...db.models import BotUser, Group
 from ...load_all import dp, bot
 from . import texts, keyboards
 from ...modules.api import API, BadResponseStatus
-from ...modules.filters import Button, IsBotNewChatMember
+from ...modules.filters import Button, IsBotNewChatMember, IsItNotGroup
 
 
 class States(StatesGroup):
@@ -20,7 +20,7 @@ class States(StatesGroup):
     change_donation_post = State()
 
 
-@dp.message_handler(CommandStart(deep_link=""), state="*")
+@dp.message_handler(CommandStart(deep_link="") and IsItNotGroup(), state="*")
 async def bot_user_start(message: types.Message, state: FSMContext, bot_user: BotUser):
     if not bot_user.token:
         await States.token.set()
@@ -41,7 +41,7 @@ async def callback_menu(callback: types.CallbackQuery, bot_user: BotUser):
     await callback.answer()
 
 
-@dp.message_handler(state=States.token)
+@dp.message_handler(IsItNotGroup(), state=States.token)
 async def token(message: types.Message, state: FSMContext, bot_user: BotUser):
     try:
         user = await API(message.text).get.user()
@@ -134,7 +134,7 @@ async def change_donation_post(callback: types.CallbackQuery):
     await callback.answer()
 
 
-@dp.message_handler(state=States.change_donation_post)
+@dp.message_handler(IsItNotGroup(), state=States.change_donation_post)
 async def real_change_donation_post(message: types.Message, state: FSMContext, bot_user: BotUser):
     await bot_user.groups.all().order_by("-id").first().update(donation_post=message.text)
     await message.answer(texts.donation_post(message.text), reply_markup=keyboards.donation_post())
@@ -150,12 +150,12 @@ async def change_donation_post(callback: types.CallbackQuery, bot_user: BotUser)
     await callback.answer()
 
 
-@dp.callback_query_handler(state="*")
+@dp.callback_query_handler(IsItNotGroup(), state="*")
 async def any_callback(callback: types.CallbackQuery):
     await callback.answer(texts.maintenance())
 
 
-@dp.message_handler(lambda message: "/start" not in message.text, state="*")
+@dp.message_handler(lambda message: "/start" not in message.text and IsItNotGroup(), state="*")
 async def any_message(message: types.Message):
     await message.answer(texts.any_message())
 # @dp.callback_query_handler(Button("add_group"), state="*"):
