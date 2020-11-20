@@ -49,3 +49,13 @@ class IsUserSubscriber(CommandStart):
             print(payload, group_ids, type(payload), flush=True)
             return False if not (payload in group_ids) else {'group_id': payload}
         return check
+
+
+class IsItNotGroup(BoundFilter):
+
+    async def check(self, message_or_call: [Message, CallbackQuery]) -> bool:
+        if isinstance(message_or_call, Message):
+            return message_or_call.chat.id == message_or_call.from_user.id
+        elif isinstance(message_or_call, CallbackQuery):
+            return message_or_call.message.chat.id == message_or_call.message.from_user.id
+
