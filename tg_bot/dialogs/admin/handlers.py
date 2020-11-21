@@ -103,7 +103,10 @@ async def get_min_sum(admin: BotUser):
 
 @dp.callback_query_handler(Button("my_group", True), state="*")
 async def my_group(callback: types.CallbackQuery, state: FSMContext, bot_user: BotUser):
-    group_id = callback.data.split(":")[-1]
+    try:
+        group_id = callback.data.split(":")[-1]
+    except:
+        group_id = (await state.get_data()).get("group_id")
     await state.update_data({"group_id": group_id})
     if group := await Group.get(tg_id=group_id):
         await callback.message.answer(texts.my_group(group.username, await get_min_sum(bot_user)), reply_markup=keyboards.my_group())
