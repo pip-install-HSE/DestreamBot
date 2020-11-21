@@ -3,14 +3,14 @@ from ...modules.keyboard import KeyboardInline, KeyboardReply
 
 bot_user_start = lambda: KeyboardInline([{_("Вебвьюха"): "url:http://example.com"}]).get()
 
-main_menu = lambda: KeyboardInline([{_("Добавить группу"): "add_group", _("Вывести деньги"): "url:http://example.com"},
-                                    {_("Группа"): "my_group"}]).get()
+main_menu = lambda groups: KeyboardInline([{_("Добавить группу"): "add_group", _("Вывести деньги"): "url:http://example.com"}] +
+                                          [{g.username: f"my_group:{g.tg_id}"} for g in groups]).get()
 
 established_as_admin = lambda: KeyboardInline([{_("Готово"): "established_as_admin"}]).get()
 
 notifications= lambda: KeyboardInline([{_("Так точно"): "notify_yes", _("Никак нет"): "notify_no"}]).get()
 my_group = lambda: KeyboardInline([{_("Пост для донатов"): "donation_post"}, {_("Ссылка для доната"): "donation_link"},
-                                   {_("Настройки группы"): "group_settings"}, {_("Назад"): "menu"}]).get()
+                                   {_("Размещать инфо о донатах"): "report_donations"}, {_("Назад"): "menu"}]).get()
 donation_post = lambda: KeyboardInline([{_("Запостить"): "post_donation_post"},
                                         {_("Изменить"): "change_donation_post"},
                                         {_("Назад"): "my_group"}]).get()
