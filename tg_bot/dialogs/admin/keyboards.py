@@ -1,10 +1,17 @@
 from ...load_all import _
 from ...modules.keyboard import KeyboardInline, KeyboardReply
+from itertools import islice
+
+def chunks(data, SIZE=10000):
+    it = iter(data)
+    for i in range(0, len(data), SIZE):
+        yield {k:data[k] for k in islice(it, SIZE)}
 
 bot_user_start = lambda: KeyboardInline([{_("Вебвьюха"): "url:http://example.com"}]).get()
 
 main_menu = lambda groups: KeyboardInline([{_("Добавить группу"): "add_group", _("Вывести деньги"): "url:http://example.com"}] +
-                                          [{g.username: f"my_group:{g.tg_id}"} for g in groups]).get()
+                                          [i for i in chunks({g.username: f"my_group:{g.tg_id}" for g in groups}, 2)]
+                                          ).get()
 
 established_as_admin = lambda: KeyboardInline([{_("Готово"): "established_as_admin"}]).get()
 
