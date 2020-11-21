@@ -13,6 +13,8 @@ main_menu = lambda groups: KeyboardInline([{_("Добавить группу"): 
                                           [i for i in chunks({g.username: f"my_group:{g.tg_id}" for g in groups}, 2)]
                                           ).get()
 
+menu = lambda : KeyboardInline([{"Меню": "menu"}]).get()
+
 established_as_admin = lambda: KeyboardInline([{_("Готово"): "established_as_admin"}]).get()
 
 notifications= lambda: KeyboardInline([{_("Так точно"): "notify_yes", _("Никак нет"): "notify_no"}]).get()

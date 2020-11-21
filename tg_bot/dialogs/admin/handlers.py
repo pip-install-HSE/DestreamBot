@@ -91,7 +91,7 @@ async def notify(callback: types.CallbackQuery, state: FSMContext):
     group_id = (await state.get_data()).get("group_id")
     notify = True if "yes" in callback.data else False
     await Group.filter(tg_id=group_id).update(is_report_donations=notify)
-    await callback.message.answer(text=texts.notify(notify))
+    await callback.message.answer(text=texts.notify(notify), reply_markup=keyboards.menu())
     await state.reset_state(with_data=False)
     await callback.answer()
 
