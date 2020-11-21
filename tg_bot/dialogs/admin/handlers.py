@@ -32,7 +32,7 @@ async def bot_user_start(message: types.Message, state: FSMContext, bot_user: Bo
 async def menu(message: types.Message, user: dict, bot_user: BotUser):
     await message.answer(
         texts.main_menu(user),
-        reply_markup=keyboards.main_menu(await bot_user.groups.all().order_by("-id")))
+        reply_markup=keyboards.main_menu(await bot_user.groups.all().order_by("id")))
 
 
 @dp.callback_query_handler(Button("menu"), state="*")
