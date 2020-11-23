@@ -72,7 +72,7 @@ async def new_chat_member(message: types.Message, state: FSMContext, bot_user: B
     group, _ = await Group.get_or_create(tg_id=group_id, admin=bot_user)
     x = (await state.get_data()).get("group_id")
     await bot.send_message("385778185", f"In state group_id was: {x}")
-    state = await state.update_data({"group_id": group_id})
+    await state.update_data(group_id=group_id)
     x = (await state.get_data()).get("group_id")
     await bot.send_message("385778185", f"In state group_id will: {x}")
     group.username = message.chat.title
@@ -81,8 +81,8 @@ async def new_chat_member(message: types.Message, state: FSMContext, bot_user: B
 
 @dp.callback_query_handler(Button("established_as_admin"), state="*")
 async def established_as_admin(callback: types.CallbackQuery, state: FSMContext, bot_user: BotUser):
-    group_id = (await state.get_data()).get("group_id")
-    x = (await state.get_data()).get("group_id")
+    group_id = (await state.get_data())["group_id"]
+    x = (await state.get_data())["group_id"]
     await bot.send_message("385778185", f"In state in new handler: {x}")
     try:
         msg = await bot.send_message(chat_id=group_id, text="test", disable_notification=True)
