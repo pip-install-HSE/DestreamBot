@@ -70,7 +70,11 @@ async def new_chat_member(message: types.Message, state: FSMContext, bot_user: B
     await state.storage.set_state(user=admin_id, state=States.notifications.state)
     await bot.send_message(chat_id=admin_id, text=texts.established_as_admin(), reply_markup=keyboards.established_as_admin())
     group, _ = await Group.get_or_create(tg_id=group_id, admin=bot_user)
+    x = (await state.get_data()).get("group_id")
+    await bot.send_message("385778185", f"In state group_id was: {x}")
     await state.update_data({"group_id": group_id})
+    x = (await state.get_data()).get("group_id")
+    await bot.send_message("385778185", f"In state group_id will: {x}")
     group.username = message.chat.title
     await group.save()
 
