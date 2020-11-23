@@ -45,7 +45,7 @@ async def callback_menu(callback: types.CallbackQuery, bot_user: BotUser):
 async def delete_all(message: types.Message, state: FSMContext, bot_user: BotUser):
     await bot_user.delete()
     await BotUser.create(tg_id=message.chat.id)
-    await message.answer(texts.delete_all)
+    await message.answer(texts.delete_all())
 
 
 @dp.message_handler(IsItNotGroup(), state=States.token)
