@@ -18,8 +18,9 @@ menu = lambda : KeyboardInline([{"Меню": "menu"}]).get()
 established_as_admin = lambda: KeyboardInline([{_("Готово"): "established_as_admin"}]).get()
 
 notifications= lambda: KeyboardInline([{_("Так точно"): "notify_yes", _("Никак нет"): "notify_no"}]).get()
-my_group = lambda: KeyboardInline([{_("Пост для донатов"): "donation_post"}, {_("Ссылка для доната"): "donation_link"},
-                                   {_("Размещать инфо о донатах"): "report_donations"}, {_("Назад"): "menu"}]).get()
+my_group = lambda is_report: KeyboardInline([{_("Пост для донатов"): "donation_post"}, {_("Ссылка для доната"): "donation_link"},
+                                   {_("Не размещать инфо о донатах") if is_report else _("Размещать инфо о донатах"): "report_donations"},
+                                    {_("Назад"): "menu"}]).get()
 donation_post = lambda: KeyboardInline([{_("Запостить"): "post_donation_post"},
                                         {_("Изменить"): "change_donation_post"},
                                         {_("Назад"): "my_group"}]).get()

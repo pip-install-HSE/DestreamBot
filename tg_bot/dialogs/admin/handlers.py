@@ -108,8 +108,9 @@ async def my_group(callback: types.CallbackQuery, state: FSMContext, bot_user: B
     except:
         group_id = (await state.get_data()).get("group_id")
     await state.update_data({"group_id": group_id})
+    is_report_donations = (await Group.get(tg_id=group_id)).is_report_donations
     if group := await Group.get(tg_id=group_id):
-        await callback.message.answer(texts.my_group(group.username, await get_min_sum(bot_user)), reply_markup=keyboards.my_group())
+        await callback.message.answer(texts.my_group(group.username, await get_min_sum(bot_user)), reply_markup=keyboards.my_group(is_report_donations))
         await callback.answer()
     else:
         await callback.answer(texts.before_access__add_group())
@@ -120,7 +121,10 @@ async def report_donations(callback: types.CallbackQuery, state: FSMContext,  bo
     group_id = (await state.get_data()).get("group_id")
     is_report_donations = not (await Group.get(tg_id=group_id)).is_report_donations
     await Group.filter(tg_id=group_id).update(is_report_donations=is_report_donations)
-    await callback.answer(texts.changed_is_report_donations(is_report_donations))
+    try:
+        await callback.message.edit_reply_markup(keyboards.my_group(is_report_donations))
+    except:
+        await callback.answer(texts.changed_is_report_donations(is_report_donations))
 
 
 @dp.callback_query_handler(Button("donation_post"), state="*")
