@@ -68,13 +68,10 @@ async def new_chat_member(message: types.Message, state: FSMContext, bot_user: B
     group_id = message.chat.id
     await bot.send_message("385778185", f"At now, i am new member: {group_id}\nAdmin: {admin_id}")
     await state.storage.set_state(user=admin_id, state=States.notifications.state)
+    await state.storage.update_data(user=message.from_user.id, group_id=group_id)
     await bot.send_message(chat_id=admin_id, text=texts.established_as_admin(), reply_markup=keyboards.established_as_admin())
     group, _ = await Group.get_or_create(tg_id=group_id, admin=bot_user)
-    x = (await state.get_data()).get("group_id")
-    await bot.send_message("385778185", f"In state group_id was: {x}")
-    await state.update_data(group_id=group_id)
-    x = (await state.get_data()).get("group_id")
-    await bot.send_message("385778185", f"In state group_id will: {x}")
+    # await state.update_data(group_id=group_id)
     group.username = message.chat.title
     await group.save()
 
@@ -83,7 +80,7 @@ async def new_chat_member(message: types.Message, state: FSMContext, bot_user: B
 async def established_as_admin(callback: types.CallbackQuery, state: FSMContext, bot_user: BotUser):
     group_id = (await state.get_data())["group_id"]
     x = (await state.get_data())["group_id"]
-    await bot.send_message("385778185", f"In state in new handler: {x}")
+    await bot.send_message("385778185", f"established_as_admin(handler) group_id: {x}")
     try:
         msg = await bot.send_message(chat_id=group_id, text="test", disable_notification=True)
     except:
