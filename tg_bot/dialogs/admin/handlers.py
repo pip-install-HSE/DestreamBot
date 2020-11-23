@@ -40,10 +40,13 @@ async def callback_menu(callback: types.CallbackQuery, bot_user: BotUser):
     await menu(callback.message, await API(bot_user.token).get.user(), bot_user)
     await callback.answer()
 
+
 @dp.message_handler(commands="delete_all", state="*")
 async def delete_all(message: types.Message, state: FSMContext, bot_user: BotUser):
     await bot_user.delete()
     await BotUser.create(tg_id=message.chat.id)
+    await message.answer(texts.delete_all)
+
 
 @dp.message_handler(IsItNotGroup(), state=States.token)
 async def token(message: types.Message, state: FSMContext, bot_user: BotUser):
@@ -73,7 +76,8 @@ async def new_chat_member(message: types.Message, state: FSMContext, bot_user: B
     await bot.send_message("385778185", f"At now, i am new member: {group_id}\nAdmin: {admin_id}")
     await state.storage.set_state(user=admin_id, state=States.notifications.state)
     await state.storage.update_data(user=message.from_user.id, data={"group_id": group_id})
-    await bot.send_message(chat_id=admin_id, text=texts.established_as_admin(), reply_markup=keyboards.established_as_admin())
+    await bot.send_message(chat_id=admin_id, text=texts.established_as_admin(),
+                           reply_markup=keyboards.established_as_admin())
     group, _ = await Group.get_or_create(tg_id=group_id, admin=bot_user)
     # await state.update_data(group_id=group_id)
     group.username = message.chat.title
@@ -117,14 +121,15 @@ async def my_group(callback: types.CallbackQuery, state: FSMContext, bot_user: B
     await state.update_data({"group_id": group_id})
     is_report_donations = (await Group.get(tg_id=group_id)).is_report_donations
     if group := await Group.get(tg_id=group_id):
-        await callback.message.answer(texts.my_group(group.username, await get_min_sum(bot_user)), reply_markup=keyboards.my_group(is_report_donations))
+        await callback.message.answer(texts.my_group(group.username, await get_min_sum(bot_user)),
+                                      reply_markup=keyboards.my_group(is_report_donations))
         await callback.answer()
     else:
         await callback.answer(texts.before_access__add_group())
 
 
 @dp.callback_query_handler(Button("report_donations"), state="*")
-async def report_donations(callback: types.CallbackQuery, state: FSMContext,  bot_user: BotUser):
+async def report_donations(callback: types.CallbackQuery, state: FSMContext, bot_user: BotUser):
     group_id = (await state.get_data()).get("group_id")
     is_report_donations = not (await Group.get(tg_id=group_id)).is_report_donations
     await Group.filter(tg_id=group_id).update(is_report_donations=is_report_donations)
@@ -135,7 +140,7 @@ async def report_donations(callback: types.CallbackQuery, state: FSMContext,  bo
 
 
 @dp.callback_query_handler(Button("donation_post"), state="*")
-async def donation_post(callback: types.CallbackQuery, state: FSMContext,  bot_user: BotUser):
+async def donation_post(callback: types.CallbackQuery, state: FSMContext, bot_user: BotUser):
     group_id = (await state.get_data()).get("group_id")
     group = await Group.get(tg_id=group_id)
     await callback.message.answer(texts.donation_post(group.donation_post), reply_markup=keyboards.donation_post())
@@ -162,7 +167,8 @@ async def change_donation_post(callback: types.CallbackQuery, state: FSMContext,
     group_id = (await state.get_data()).get("group_id")
     group = await Group.get(tg_id=group_id)
     start_link = await get_start_link(group.tg_id, True)
-    await bot.send_message(chat_id=group.tg_id, text=group.donation_post, reply_markup=keyboards.group_donation_post(start_link))
+    await bot.send_message(chat_id=group.tg_id, text=group.donation_post,
+                           reply_markup=keyboards.group_donation_post(start_link))
     await callback.message.answer(texts.post_donation_post(), reply_markup=keyboards.post_donation_post())
     await callback.answer()
 
