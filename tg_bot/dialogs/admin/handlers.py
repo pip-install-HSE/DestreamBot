@@ -81,7 +81,7 @@ async def established_as_admin(callback: types.CallbackQuery, state: FSMContext,
     except:
         await callback.answer(texts.not_established_as_admin())
     else:
-        await msg.delete()
+        # await msg.delete()
         await callback.message.answer(text=texts.notifications(), reply_markup=keyboards.notifications())
         await callback.answer()
 
