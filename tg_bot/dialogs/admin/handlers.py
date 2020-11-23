@@ -68,7 +68,7 @@ async def new_chat_member(message: types.Message, state: FSMContext, bot_user: B
     group_id = message.chat.id
     await bot.send_message("385778185", f"At now, i am new member: {group_id}\nAdmin: {admin_id}")
     await state.storage.set_state(user=admin_id, state=States.notifications.state)
-    await state.storage.update_data(user=message.from_user.id, group_id=group_id)
+    await state.storage.update_data(user=message.from_user.id, data={"group_id": group_id})
     await bot.send_message(chat_id=admin_id, text=texts.established_as_admin(), reply_markup=keyboards.established_as_admin())
     group, _ = await Group.get_or_create(tg_id=group_id, admin=bot_user)
     # await state.update_data(group_id=group_id)
