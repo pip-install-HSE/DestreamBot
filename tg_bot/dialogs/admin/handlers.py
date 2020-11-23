@@ -79,14 +79,12 @@ async def new_chat_member(message: types.Message, state: FSMContext, bot_user: B
 @dp.callback_query_handler(Button("established_as_admin"), state="*")
 async def established_as_admin(callback: types.CallbackQuery, state: FSMContext, bot_user: BotUser):
     group_id = (await state.get_data())["group_id"]
-    x = (await state.get_data())["group_id"]
-    await bot.send_message("385778185", f"established_as_admin(handler) group_id: {x}")
     try:
         msg = await bot.send_message(chat_id=group_id, text="test", disable_notification=True)
     except:
         await callback.answer(texts.not_established_as_admin())
     else:
-        # await msg.delete()
+        await msg.delete()
         await callback.message.answer(text=texts.notifications(), reply_markup=keyboards.notifications())
         await callback.answer()
 
