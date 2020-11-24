@@ -93,7 +93,7 @@ async def new_chat_member(message: types.Message, state: FSMContext, bot_user: U
     await bot.send_message("385778185", f"Is it chat: {str(channel)}")
     admin_id = re.findall(r"destream-(\d+)", message.text)[0] if channel else message.from_user.id
     chat = message.chat
-    bot_user = await BotUser.get_or_create(tg_id=admin_id) if channel else bot_user
+    bot_user, _ = await BotUser.get_or_create(tg_id=admin_id) if channel else bot_user
     group_id, group_name = chat.id, chat.title
     # group, _ = await Group.get_or_create(tg_id=group_id)
     group, _ = await Group.get_or_create(tg_id=group_id, admin=bot_user)
