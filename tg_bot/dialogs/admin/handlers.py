@@ -95,7 +95,7 @@ async def new_chat_member(message: types.Message, state: FSMContext, bot_user: U
     chat = message.chat
     bot_user, _ = await BotUser.get_or_create(tg_id=admin_id) if channel else bot_user
     group_id, group_name = chat.id, chat.title
-    group, _ = await Group.get_or_create(tg_id=group_id)
+    group, _ = await Group.get_or_create(tg_id=group_id, admin=None)
     # group, _ = await Group.get_or_create(tg_id=group_id, admin=bot_user)
     group.admin, group.username = bot_user, group_name
     await group.save()
