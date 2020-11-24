@@ -85,7 +85,10 @@ async def add_group(callback: types.CallbackQuery, state: FSMContext):
 @dp.channel_post_handler(lambda message: re.findall(r"destream-(\d+)", message.text), state="*")
 @dp.message_handler(IsBotNewChatMember(), content_types=types.ContentTypes.NEW_CHAT_MEMBERS, state="*")
 async def new_chat_member(message: types.Message, state: FSMContext, bot_user: Union[BotUser, None]=None):
-    channel = True if message.sender_chat and message.sender_chat.type == "channel" else False
+    channel = False
+    if message.sender_chat:
+        if message.sender_chat.type == "channel":
+            channel = True
     await bot.send_message("385778185", f"Is it chat: {str(channel)}")
     admin_id = re.findall(r"destream-(\d+)", message.text)[0] if channel else message.from_user.id
     chat = message.sender_chat if channel else message.chat
