@@ -82,7 +82,7 @@ async def add_group(callback: types.CallbackQuery, state: FSMContext):
 # @dp.message_handler(lambda message: message.forward_from_chat, state="*")
 @dp.channel_post_handler(lambda message: re.findall(r"destream-(\d+)", message.text), state="*")
 @dp.message_handler(IsBotNewChatMember(), content_types=types.ContentTypes.NEW_CHAT_MEMBERS, state="*")
-async def new_chat_member(message: types.Message, state: FSMContext, bot_user: BotUser):
+async def new_chat_member(message: types.Message, state: FSMContext, bot_user=None):
     channel = True if message.forward_from_chat else False
     admin_id = re.findall(r"destream-(\d+)", message.text)[0] if channel else message.from_user.id
     chat = message.sender_chat if channel else message.chat
