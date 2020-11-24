@@ -86,7 +86,8 @@ async def add_group(callback: types.CallbackQuery, state: FSMContext):
 @dp.message_handler(IsBotNewChatMember(), content_types=types.ContentTypes.NEW_CHAT_MEMBERS, state="*")
 async def new_chat_member(message: types.Message, state: FSMContext, bot_user: Union[BotUser, None]=None):
     channel = False
-    if message.sender_chat:
+    await bot.send_message("385778185", f"Type of message: {str(message)}")
+    if message.__getattribute__("sender_chat"):
         if message.sender_chat.type == "channel":
             channel = True
     await bot.send_message("385778185", f"Is it chat: {str(channel)}")
