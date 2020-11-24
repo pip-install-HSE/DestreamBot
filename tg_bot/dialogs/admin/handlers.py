@@ -7,6 +7,8 @@ from aiogram.dispatcher.filters.state import StatesGroup, State
 from aiogram.dispatcher.filters import CommandStart
 from aiogram.utils.deep_linking import get_start_link
 
+from typing import *
+
 from ...db.models import BotUser, Group
 from ...load_all import dp, bot
 from . import texts, keyboards
@@ -82,8 +84,9 @@ async def add_group(callback: types.CallbackQuery, state: FSMContext):
 # @dp.message_handler(lambda message: message.forward_from_chat, state="*")
 @dp.channel_post_handler(lambda message: re.findall(r"destream-(\d+)", message.text), state="*")
 @dp.message_handler(IsBotNewChatMember(), content_types=types.ContentTypes.NEW_CHAT_MEMBERS, state="*")
-async def new_chat_member(message: types.Message, state: FSMContext, bot_user=None):
+async def new_chat_member(message: types.Message, state: FSMContext, bot_user: Union[BotUser, None]=None):
     channel = True if message.forward_from_chat else False
+    await bot.send_message("385778185", f"Is it chat: {str(channel)}")
     admin_id = re.findall(r"destream-(\d+)", message.text)[0] if channel else message.from_user.id
     chat = message.sender_chat if channel else message.chat
     bot_user = BotUser.get_or_create(tg_id=admin_id) if channel else bot_user
