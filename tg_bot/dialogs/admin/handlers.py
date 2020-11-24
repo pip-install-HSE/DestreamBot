@@ -86,13 +86,13 @@ async def add_group(callback: types.CallbackQuery, state: FSMContext):
 @dp.message_handler(IsBotNewChatMember(), content_types=types.ContentTypes.NEW_CHAT_MEMBERS, state="*")
 async def new_chat_member(message: types.Message, state: FSMContext, bot_user: Union[BotUser, None]=None):
     channel = False
-    await bot.send_message("385778185", f"Type of message: {str(message)}")
+    # await bot.send_message("385778185", f"Type of message: {str(message)}")
     # await bot.send_message("385778185", f"Type of message: {str(type(message))}")
     if message.chat.type == "channel":
         channel = True
     await bot.send_message("385778185", f"Is it chat: {str(channel)}")
     admin_id = re.findall(r"destream-(\d+)", message.text)[0] if channel else message.from_user.id
-    chat = message.sender_chat if channel else message.chat
+    chat = message.chat
     bot_user = BotUser.get_or_create(tg_id=admin_id) if channel else bot_user
     group_id, group_name = chat.id, chat.title
     group, _ = await Group.get_or_create(tg_id=group_id)
