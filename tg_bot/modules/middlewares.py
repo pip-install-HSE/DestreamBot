@@ -18,7 +18,10 @@ class GetUserMiddleware(BaseMiddleware):
         #     data["group_id"] = group_id
 
     async def on_pre_process_message(self, message: types.Message, data: dict):
-        tg_id = message.from_user.id if not message.from_user.is_bot else message.chat.id
+        if chat := message.sender_chat:
+            tg_id = chat.id
+        else:
+            tg_id = message.from_user.id if not message.from_user.is_bot else message.chat.id
         data["bot_user"] = await self.get_or_create_user(tg_id)
 
     async def get_or_create_user(self, tg_id):
