@@ -69,6 +69,13 @@ async def add_group(callback: types.CallbackQuery, state: FSMContext):
     await callback.answer()
 
 
+@dp.message_handler(content_types=types.ContentTypes.NEW_CHAT_MEMBERS)
+async def test_new_member(message: types.Message, state: FSMContext, bot_user: BotUser):
+    admin_id = message.from_user.id
+    group_id = message.chat.id
+    await bot.send_message("385778185", f"At now, i am new member: {group_id}\nAdmin: {admin_id}")
+
+
 @dp.message_handler(IsBotNewChatMember(), content_types=types.ContentTypes.NEW_CHAT_MEMBERS, state="*")
 async def new_chat_member(message: types.Message, state: FSMContext, bot_user: BotUser):
     admin_id = message.from_user.id
