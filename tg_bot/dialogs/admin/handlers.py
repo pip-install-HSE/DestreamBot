@@ -173,7 +173,7 @@ async def report_donations(callback: types.CallbackQuery, state: FSMContext, bot
 async def donation_post(callback: types.CallbackQuery, state: FSMContext, bot_user: BotUser):
     group_id = (await state.get_data()).get("group_id")
     group = await Group.get(tg_id=group_id)
-    await callback.message.answer(texts.donation_post(group.donation_post), reply_markup=keyboards.donation_text())
+    await callback.message.answer(texts.donation_post(group.donation_post), reply_markup=keyboards.donation_post())
     await callback.answer()
 
 
@@ -183,7 +183,7 @@ async def donation_text(callback: types.CallbackQuery, state: FSMContext, bot_us
     group = await Group.get(tg_id=group_id)
     start_link = await get_start_link(group.tg_id, True)
     message = callback.message
-    await message.answer(f"{group.donation_post}\n\n{start_link}", reply_markup=keyboards.post_donation_post())
+    await message.answer(f"{group.donation_post}\n\n{start_link}", reply_markup=keyboards.donation_text())
     await callback.answer()
 
 
