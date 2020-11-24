@@ -183,7 +183,7 @@ async def donation_text(callback: types.CallbackQuery, state: FSMContext, bot_us
     group = await Group.get(tg_id=group_id)
     start_link = await get_start_link(group.tg_id, True)
     message = callback.message
-    await message.answer(f"{group.donation_post}\n\n{start_link}", reply_markup=keyboards.donation_text())
+    await message.answer(f"{group.donation_post}\n\n{start_link}", reply_markup=keyboards.back_to_donation_post())
     await callback.answer()
 
 
@@ -210,6 +210,15 @@ async def change_donation_post(callback: types.CallbackQuery, state: FSMContext,
     await bot.send_message(chat_id=group.tg_id, text=group.donation_post,
                            reply_markup=keyboards.group_donation_post(start_link))
     await callback.message.answer(texts.post_donation_post(), reply_markup=keyboards.post_donation_post())
+    await callback.answer()
+
+@dp.callback_query_handler(Button("donation_link"), state="*")
+async def any_callback(callback: types.CallbackQuery, state: FSMContext, bot_user: BotUser):
+    group_id = (await state.get_data()).get("group_id")
+    group = await Group.get(tg_id=group_id)
+    start_link = await get_start_link(group.tg_id, True)
+    message = callback.message
+    await message.answer(f"{start_link}", reply_markup=keyboards.back_to_donation_post())
     await callback.answer()
 
 
