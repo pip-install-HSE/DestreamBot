@@ -222,7 +222,7 @@ async def any_callback(callback: types.CallbackQuery, state: FSMContext, bot_use
     group = await Group.get(tg_id=group_id)
     start_link = await get_start_link(group.tg_id, True)
     message = callback.message
-    await message.answer(f"{start_link}", reply_markup=keyboards.back_to_donation_post())
+    await message.answer(f"{start_link}", reply_markup=keyboards.back_to_group_settings())
     await callback.answer()
 
 

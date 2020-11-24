@@ -29,3 +29,4 @@ post_donation_post = lambda: KeyboardInline([{_("К группе"): "my_group"}]
 group_donation_post = lambda url: KeyboardInline([{_("Задонатить"): f"url:{url}"}]).get()
 
 back_to_donation_post = lambda: KeyboardInline([{_("Назад"): "donation_post"}]).get()
+back_to_group_settings = lambda: KeyboardInline([{_("Назад"): "my_group"}]).get()
