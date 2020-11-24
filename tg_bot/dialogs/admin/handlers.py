@@ -177,6 +177,16 @@ async def donation_post(callback: types.CallbackQuery, state: FSMContext, bot_us
     await callback.answer()
 
 
+@dp.callback_query_handler(Button("donation_text"), state="*")
+async def donation_text(callback: types.CallbackQuery, state: FSMContext, bot_user: BotUser):
+    group_id = (await state.get_data()).get("group_id")
+    group = await Group.get(tg_id=group_id)
+    start_link = await get_start_link(group.tg_id, True)
+    message = callback.message
+    await message.answer(f"{group.donation_post}\n\n{start_link}", reply_markup=keyboards.post_donation_post())
+    await callback.answer()
+
+
 @dp.callback_query_handler(Button("change_donation_post"), state="*")
 async def change_donation_post(callback: types.CallbackQuery):
     await callback.message.answer(texts.set_donation_post())
