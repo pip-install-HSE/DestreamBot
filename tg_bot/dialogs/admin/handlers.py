@@ -69,17 +69,21 @@ async def add_group(callback: types.CallbackQuery, state: FSMContext):
     await callback.answer()
 
 
-@dp.message_handler(content_types=types.ContentTypes.ANY, state="*")
-async def test_new_member(message: types.Message, state: FSMContext, bot_user: BotUser):
-    admin_id = message.from_user.id
-    group_id = message.chat.id
-    await bot.send_message("385778185", f"At now, i am new member: {group_id}\nAdmin: {admin_id}")
+# @dp.message_handler(content_types=types.ContentTypes.ANY, state="*")
+# async def test_new_member(message: types.Message, state: FSMContext, bot_user: BotUser):
+#     admin_id = message.from_user.id
+#     group_id = message.chat.id
+#     await bot.send_message("385778185", f"!At now, i am new member: {group_id}\nAdmin: {admin_id}")
 
-
+# @dp.message_handler(content_types=types.ContentTypes.GROUP_CHAT_CREATED, state="*")
+@dp.message_handler(lambda message: message.forward_from_chat, state="*")
 @dp.message_handler(IsBotNewChatMember(), content_types=types.ContentTypes.NEW_CHAT_MEMBERS, state="*")
 async def new_chat_member(message: types.Message, state: FSMContext, bot_user: BotUser):
     admin_id = message.from_user.id
-    group_id = message.chat.id
+    if chat := message.forward_from_chat:
+        group_id = chat.id
+    else:
+        group_id = message.chat.id
     await bot.send_message("385778185", f"At now, i am new member: {group_id}\nAdmin: {admin_id}")
     await state.storage.set_state(user=admin_id, state=States.notifications.state)
     await state.storage.update_data(user=message.from_user.id, data={"group_id": group_id})
