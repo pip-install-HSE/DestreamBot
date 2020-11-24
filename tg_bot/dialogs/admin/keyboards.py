@@ -22,8 +22,8 @@ my_group = lambda is_report: KeyboardInline([{_("Пост для донатов"
                                    {_("Не размещать инфо о донатах") if is_report else _("Размещать инфо о донатах"): "report_donations"},
                                     {_("Назад"): "menu"}]).get()
 donation_post = lambda: KeyboardInline([{_("Запостить"): "post_donation_post"},
-                                        {_("Изменить"): "change_donation_post"},
-                                        {_("Текст доната"): "donation_text"},
+                                        {_("Изменить текст поста"): "change_donation_post"},
+                                        {_("Получить пост"): "donation_text"},
                                         {_("Назад"): "my_group"}]).get()
 post_donation_post = lambda: KeyboardInline([{_("К группе"): "my_group"}]).get()
 group_donation_post = lambda url: KeyboardInline([{_("Задонатить"): f"url:{url}"}]).get()
