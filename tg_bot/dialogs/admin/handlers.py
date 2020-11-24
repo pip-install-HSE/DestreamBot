@@ -1,3 +1,5 @@
+import re
+
 from aiogram import types
 from aiogram.dispatcher import FSMContext
 from aiogram.dispatcher.filters.state import StatesGroup, State
@@ -65,6 +67,7 @@ async def token(message: types.Message, state: FSMContext, bot_user: BotUser):
 async def add_group(callback: types.CallbackQuery, state: FSMContext):
     message = callback.message
     await message.answer(texts.add_group())
+    await message.answer(f"destream-{message.chat.id}")
     await States.add_group.set()
     await callback.answer()
 
@@ -77,23 +80,30 @@ async def add_group(callback: types.CallbackQuery, state: FSMContext):
 
 # @dp.message_handler(content_types=types.ContentTypes.GROUP_CHAT_CREATED, state="*")
 # @dp.message_handler(lambda message: message.forward_from_chat, state="*")
-@dp.channel_post_handler(lambda message: message.text.lower() == "destream", state="*")
+@dp.channel_post_handler(regexp="destream-\d+", state="*")
 @dp.message_handler(IsBotNewChatMember(), content_types=types.ContentTypes.NEW_CHAT_MEMBERS, state="*")
 async def new_chat_member(message: types.Message, state: FSMContext, bot_user: BotUser):
-    admin_id = message.from_user.id
-    chat = message.chat
-    # chat = message.forward_from_chat if message.forward_from_chat else message.chat
-    group_id = chat.id
-    group_name = chat.title
-    await bot.send_message("385778185", f"At now, i am new member: {group_id}\nAdmin: {admin_id}")
+    channel = True if message.forward_from_chat else False
+    admin_id = re.findall(r"destream-(\d+)", message.text)[0] if channel else message.from_user.id
+    chat = message.sender_chat if channel else message.chat
+    bot_user = BotUser.get_or_create(tg_id=admin_id) if channel else bot_user
+    group_id, group_name = chat.id, chat.title
+    group, _ = await Group.get_or_create(tg_id=group_id)
+    group.admin, group.username = bot_user, group_name
+    await group.save()
+    await bot.send_message("385778185", f"At now, i am new member: {group_id}\nAdmin: {admin_id}\n{group_name}")
     await state.storage.set_state(user=admin_id, state=States.notifications.state)
     await state.storage.update_data(user=message.from_user.id, data={"group_id": group_id})
-    await bot.send_message(chat_id=admin_id, text=texts.established_as_admin(),
-                           reply_markup=keyboards.established_as_admin())
-    group, _ = await Group.get_or_create(tg_id=group_id, admin=bot_user)
+    try:
+        await bot.send_message(chat_id=admin_id, text=texts.established_as_admin(),
+                               reply_markup=keyboards.established_as_admin())
+    except:
+        pass
+    try:
+        await message.delete()
+    except:
+        pass
     # await state.update_data(group_id=group_id)
-    group.username = group_name
-    await group.save()
 
 
 @dp.callback_query_handler(Button("established_as_admin"), state="*")
