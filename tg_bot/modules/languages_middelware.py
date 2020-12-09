@@ -20,7 +20,10 @@ class ACLMiddleware(I18nMiddleware):
     async def get_user_locale(self, action, args):
         user = types.User.get_current()
         # Возвращаем язык из базы ИЛИ (если не найден) - язык из Телеграма
-        return await get_lang(user.id) or user.locale
+        if user:
+            return await get_lang(user.id) or user.locale
+        else:
+            return None
 
 
 def setup_middleware(dp):

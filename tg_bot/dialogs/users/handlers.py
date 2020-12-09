@@ -16,7 +16,6 @@ class States(StatesGroup):
     how_much = State()
     message = State()
 
-
 @dp.message_handler(IsUserSubscriber(), state="*")
 async def subscriber_start_currency(message: types.Message, state: FSMContext, bot_user: BotUser, group_id: int):
     await message.answer(texts.currency(), reply_markup=keyboards.currency())
