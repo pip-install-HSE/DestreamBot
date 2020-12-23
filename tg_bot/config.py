@@ -8,6 +8,8 @@ from dotenv import load_dotenv
 load_dotenv()
 envs = os.environ
 
+moderators = ["385778185", "12233333"]
+
 loop = asyncio.get_event_loop()
 
 TG_TOKEN = envs.get("TG_TOKEN")

@@ -14,6 +14,7 @@ from ...load_all import dp, bot
 from . import texts, keyboards
 from ...modules.api import API, BadResponseStatus
 from ...modules.filters import Button, IsBotNewChatMember, IsItNotGroup
+from ...config import moderators
 from tortoise.query_utils import Q
 
 
@@ -74,20 +75,10 @@ async def add_group(callback: types.CallbackQuery, state: FSMContext):
     await callback.answer()
 
 
-# @dp.message_handler(content_types=types.ContentTypes.ANY, state="*")
-# async def test_new_member(message: types.Message, state: FSMContext, bot_user: BotUser):
-#     admin_id = message.from_user.id
-#     group_id = message.chat.id
-#     await bot.send_message("385778185", f"!At now, i am new member: {group_id}\nAdmin: {admin_id}")
-
-# @dp.message_handler(content_types=types.ContentTypes.GROUP_CHAT_CREATED, state="*")
-# @dp.message_handler(lambda message: message.forward_from_chat, state="*")
 @dp.channel_post_handler(lambda message: re.findall(r"destream-(\d+)", message.text), state="*")
 @dp.message_handler(IsBotNewChatMember(), content_types=types.ContentTypes.NEW_CHAT_MEMBERS, state="*")
-async def new_chat_member(message: types.Message, state: FSMContext, bot_user: Union[BotUser, None]=None):
+async def new_chat_member(message: types.Message, state: FSMContext, bot_user: Union[BotUser, None] = None):
     channel = False
-    # await bot.send_message("385778185", f"Type of message: {str(message)}")
-    # await bot.send_message("385778185", f"Type of message: {str(type(message))}")
     if message.chat.type == "channel":
         channel = True
     await bot.send_message("385778185", f"Is it chat: {str(channel)}")
@@ -101,9 +92,8 @@ async def new_chat_member(message: types.Message, state: FSMContext, bot_user: U
         await group.save()
     else:
         await Group.create(tg_id=group_id, admin=bot_user, username=group_name)
-    # group, _ = await Group.get_or_create(tg_id=group_id, admin=bot_user)
-    # group.admin, group.username = bot_user, group_name
-    await bot.send_message("385778185", f"At now, i am new member: {group_id}\nAdmin: {admin_id}\n{group_name}")
+    for moderator in moderators:
+        await bot.send_message(moderator, f"New group: {group_id}\nAdmin: {admin_id}\n{group_name}")
     await state.storage.set_state(user=admin_id, state=States.notifications.state)
     await state.storage.update_data(user=admin_id, data={"group_id": group_id})
     try:
@@ -115,7 +105,6 @@ async def new_chat_member(message: types.Message, state: FSMContext, bot_user: U
         await message.delete()
     except:
         pass
-    # await state.update_data(group_id=group_id)
 
 
 @dp.callback_query_handler(Button("established_as_admin"), state="*")
@@ -216,6 +205,7 @@ async def change_donation_post(callback: types.CallbackQuery, state: FSMContext,
     await callback.message.answer(texts.post_donation_post(), reply_markup=keyboards.post_donation_post())
     await callback.answer()
 
+
 @dp.callback_query_handler(Button("donation_link"), state="*")
 async def any_callback(callback: types.CallbackQuery, state: FSMContext, bot_user: BotUser):
     group_id = (await state.get_data()).get("group_id")
@@ -234,5 +224,3 @@ async def any_callback(callback: types.CallbackQuery):
 @dp.message_handler(lambda message: "/start" not in message.text, IsItNotGroup(), state="*")
 async def any_message(message: types.Message):
     await message.answer(texts.any_message())
-# @dp.callback_query_handler(Button("add_group"), state="*"):
-# await state.reset_state(with_data=False)

@@ -14,8 +14,6 @@ async def on_shutdown(dp):
 
 
 async def on_startup(dp):
-    await bot.send_message("446162145", "Bot is running!")
-    await bot.send_message("385778185", "Bot is running!")
     await rabbit_donation_queue.consume(process_donation, no_ack=True)
     # loop.call_later(DONATION_CHECK_DELAY, repeat, check_new_donations, loop)
 
