@@ -1,0 +1,33 @@
+DATABASE=postgres
+# database name, any name is fine
+POSTGRES_DB=
+# postgres user name, any user name is fine
+POSTGRES_USER=
+# postgres user password, any user password is fine
+POSTGRES_PASSWORD=
+# ip postgres, "db" by default
+POSTGRES_HOST=
+# port postgres, 5432 by default
+POSTGRES_PORT=
+
+# name of redis host, if using docker it is name of redis container
+REDIS_HOST=redis
+
+# server ip needed for CI/CD only
+SERVER_HOST=
+
+# RabbitMQ user name, any user name is fine
+RABBIT_USER=
+# RabbitMQ user password, any user password is fine
+RABBIT_PASSWORD=
+# RabbitMQ host
+RABBIT_HOST=
+# RabbitMQ port, 5672 by default
+RABBIT_PORT=
+# RabbitMQ virtual host
+RABBIT_VIRTUAL_HOST=
+# RabbitMQ queue
+RABBIT_QUEUE=
+
+# Telegram token, get by @BotFather
+TG_TOKEN=
