@@ -1,0 +1,34 @@
+version: "3.3"
+
+services:
+  db:
+    container_name: db
+    image: postgres
+    ports:
+      - "5432:5432"
+    env_file:
+      - "./.env"
+    restart: always
+
+  redis:
+    container_name: redis
+    image: "redis:alpine"
+    volumes:
+      - ./storage/redis/data:/data
+    restart: always
+
+  tgbot:
+    container_name: tgbot
+    build:
+      context: .
+      dockerfile: Dockerfile
+    working_dir: "/code"
+    depends_on:
+      - db
+    env_file:
+      - "./.env"
+    command: sh -c "python start_tg_bot.py"
+    volumes:
+      - ./migrations:/code/migrations
+      - ./aerich.ini:/code/aerich.ini
+    restart: always
