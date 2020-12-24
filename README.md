@@ -13,7 +13,7 @@ git clone https://github.com/pip-install-HSE/DestreamBot.git
 ```
 bash docker_install.sh
 ```
-4. Then rename .end.dist to .env and fill all variables.
+4. Then rename .env.dist to .env and fill all variables.
 
 5.Run application:
 ```
