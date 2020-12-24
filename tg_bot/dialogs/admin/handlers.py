@@ -93,7 +93,10 @@ async def new_chat_member(message: types.Message, state: FSMContext, bot_user: U
     else:
         await Group.create(tg_id=group_id, admin=bot_user, username=group_name)
     for moderator in moderators:
-        await bot.send_message(moderator, f"New group: {group_id}\nAdmin: {admin_id}\n{group_name}")
+        try:
+            await bot.send_message(moderator, f"New group: {group_id}\nAdmin: {admin_id}\n{group_name}")
+        except:
+            pass
     await state.storage.set_state(user=admin_id, state=States.notifications.state)
     await state.storage.update_data(user=admin_id, data={"group_id": group_id})
     try:

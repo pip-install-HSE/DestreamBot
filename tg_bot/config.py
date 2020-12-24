@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 envs = os.environ
 
-moderators = ["385778185", "12233333"]
+moderators = [i.strip() for i in envs["MODERATORS"].split(",")]
 
 loop = asyncio.get_event_loop()
 
