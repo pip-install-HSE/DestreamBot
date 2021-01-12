@@ -20,7 +20,6 @@ class Button(BoundFilter):
                 return message.text == self.key
         elif isinstance(message, CallbackQuery):
             if self.contains:
-                # await bot.send_message(chat_id=385778185, text=str(message.message))
                 return self.key in message.data
             else:
                 return self.key == message.data
