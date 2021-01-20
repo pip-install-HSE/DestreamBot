@@ -71,6 +71,7 @@ async def subscriber_message(message: types.Message, state: FSMContext):
                                                           amount=state_data.get("amount"),
                                                           message=message.text,
                                                           additional_parameters={"admin_tg_id": group.admin.tg_id,
-                                                                                 "group_id": group_id})
+                                                                                 "group_id": group_id,
+                                                                                 "don_name": f"{message.from_user.username if message.from_user.username else message.from_user.full_name}"})
     await message.answer(texts.webview_donation(), reply_markup=keyboards.webview_donation(response['donationUrl']))
     await state.reset_state(with_data=False)
