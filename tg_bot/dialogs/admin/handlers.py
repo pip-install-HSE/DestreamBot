@@ -218,7 +218,7 @@ async def any_callback(callback: types.CallbackQuery, state: FSMContext, bot_use
     await callback.answer()
 
 
-@dp.message_handler(lambda message: "/reset_token" not in message.text, IsItNotGroup(), state="*")
+@dp.message_handler(IsItNotGroup(), commands=["reset_token"], state="*")
 async def any_message(message: types.Message):
     await States.token.set()
     await message.answer(texts.reset_token())
