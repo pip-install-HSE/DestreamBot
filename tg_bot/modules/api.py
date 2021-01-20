@@ -1,6 +1,6 @@
 import json
 import aiohttp
-from ..load_all import loop
+from ..load_all import loop, API_URL
 
 
 class BadResponseStatus(Exception):
@@ -12,7 +12,7 @@ class Methods:
     def __init__(self, key):
         self.key = key
         self.headers = {"X-API-KEY": key}
-        self.common_url = "https://exp.destream.net/api/v1/telegram-bot/"
+        self.common_url = API_URL
 
 
 class MethodsGET(Methods):

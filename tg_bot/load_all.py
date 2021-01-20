@@ -12,7 +12,9 @@ from .modules.middlewares import GetUserMiddleware
 from .config import *
 
 
-storage = RedisStorage2(host=REDIS_HOST)
+storage = RedisStorage2(host=REDIS_HOST,
+                        port=REDIS_PORT,
+                        password=REDIS_PASS if REDIS_PASS else None)
 bot = Bot(token=TG_TOKEN, parse_mode="HTML", loop=loop)
 dp = Dispatcher(bot, storage=storage)
 
