@@ -54,7 +54,7 @@ async def subscriber_how_much_msg(message: types.Message, state: FSMContext):
         await message.answer(texts.sum_too_low_or_undefined())
     else:
         if ((limit := get_limit(group_admin['donationLimits'], state_data.get("currency")))
-                and limit["maxAmount"] > amount > limit["minAmount"]):
+                and limit["maxAmount"] >= amount >= limit["minAmount"]):
             await state.update_data({"amount": amount})
             await message.answer(texts.message())
             await States.message.set()
