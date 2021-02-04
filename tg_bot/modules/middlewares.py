@@ -30,7 +30,8 @@ class GetUserMiddleware(BaseMiddleware):
     async def get_or_create_user(self, tg_id):
         try:
             user, _ = await BotUser.get_or_create(tg_id=tg_id)
-        except:
+        except Exception as e:
+            print(str(e), flush=True)
             return None
         else:
             return user
