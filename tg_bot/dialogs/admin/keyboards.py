@@ -11,7 +11,8 @@ def chunks(data, SIZE=10000):
 bot_user_start = lambda: KeyboardInline([{_("▶ Перейти в Destream"): "url:https://destream.net/"}, {"❓Служба поддержки": "url:https://destream.net/"}]).get()
 
 main_menu = lambda groups: KeyboardInline([{"История донатов": "url:https://destream.net/", _("Вывести деньги"): "url:https://destream.net/"}] +
-                                          [i for i in chunks({g.username: f"my_group:{g.tg_id}" for g in groups}, 2)] +
+                                          [{"🔄 Сменить токен": "reset_token"}] +
+                                          [i for i in chunks({f"{j+1}. {g.username}": f"my_group:{g.tg_id}" for j, g in enumerate(groups)}, 2)] +
                                           [{_("➕ Добавить группу"): "add_group"}]
                                           ).get()
 
@@ -32,3 +33,4 @@ group_donation_post = lambda url: KeyboardInline([{_("Задонатить"): f"
 
 back_to_donation_post = lambda: KeyboardInline([{_("⬅ Назад"): "donation_post"}]).get()
 back_to_group_settings = lambda: KeyboardInline([{_("⬅ Назад"): "my_group"}]).get()
+reset_token_confirm= lambda: KeyboardInline([{_("✅ Да"): "reset_token_yes", _("❌ Нет"): "menu"}]).get()

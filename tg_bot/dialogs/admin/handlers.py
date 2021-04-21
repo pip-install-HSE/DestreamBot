@@ -9,6 +9,8 @@ from aiogram.utils.deep_linking import get_start_link
 
 from typing import *
 
+from tortoise.exceptions import DoesNotExist
+
 from ...db.models import BotUser, Group
 from ...load_all import dp, bot
 from . import texts, keyboards
@@ -46,11 +48,23 @@ async def callback_menu(callback: types.CallbackQuery, bot_user: BotUser):
     await callback.answer()
 
 
+@dp.callback_query_handler(Button("reset_token_yes"), state="*")
 @dp.message_handler(commands="delete_all", state="*")
-async def delete_all(message: types.Message, state: FSMContext, bot_user: BotUser):
+async def delete_all(message_or_call: [types.Message, types.CallbackQuery], state: FSMContext, bot_user: BotUser):
+    if isinstance(message_or_call, types.CallbackQuery):
+        await message_or_call.answer()
+        message = message_or_call.message
+    else:
+        message = message_or_call
     await bot_user.delete()
-    await BotUser.create(tg_id=message.chat.id)
-    await message.answer(texts.delete_all())
+    bot_user = await BotUser.create(tg_id=message.chat.id)
+    await bot_user_start(message, state, bot_user)
+
+
+@dp.callback_query_handler(Button("reset_token"), state="*")
+async def reset_token(callback: types.CallbackQuery, bot_user: BotUser):
+    await callback.message.answer(texts.reset_token_confirm(), reply_markup=keyboards.reset_token_confirm())
+    await callback.answer()
 
 
 @dp.message_handler(IsItNotGroup(), state=States.token)
@@ -73,6 +87,13 @@ async def add_group(callback: types.CallbackQuery, state: FSMContext):
     await message.answer(f"destream-{message.chat.id}")
     await States.add_group.set()
     await callback.answer()
+
+
+@dp.message_handler(content_types=types.ContentTypes.LEFT_CHAT_MEMBER, state="*")
+async def left_chat_member(message: types.Message, state: FSMContext, bot_user: Union[BotUser, None] = None):
+    if message.left_chat_member.id == (await bot.me).id:
+        group = await Group.get(tg_id=message.chat.id)
+        await group.delete()
 
 
 @dp.channel_post_handler(lambda message: re.findall(r"destream-(\d+)", message.text), state="*")
@@ -144,13 +165,15 @@ async def my_group(callback: types.CallbackQuery, state: FSMContext, bot_user: B
     except:
         group_id = (await state.get_data()).get("group_id")
     await state.update_data({"group_id": group_id})
-    is_report_donations = (await Group.get(tg_id=group_id)).is_report_donations
-    if group := await Group.get(tg_id=group_id):
+    try:
+        group = await Group.get(tg_id=group_id)
+        assert group is not None
         await callback.message.answer(texts.my_group(group.username, await get_min_sum(bot_user)),
-                                      reply_markup=keyboards.my_group(is_report_donations))
+                                          reply_markup=keyboards.my_group(group.is_report_donations))
         await callback.answer()
-    else:
+    except (AssertionError, DoesNotExist):
         await callback.answer(texts.before_access__add_group())
+        await menu(callback.message, await API(bot_user.token).get.user(), bot_user)
 
 
 @dp.callback_query_handler(Button("report_donations"), state="*")
@@ -216,12 +239,6 @@ async def any_callback(callback: types.CallbackQuery, state: FSMContext, bot_use
     message = callback.message
     await message.answer(f"{start_link}", reply_markup=keyboards.back_to_group_settings())
     await callback.answer()
-
-
-@dp.message_handler(IsItNotGroup(), commands=["reset_token"], state="*")
-async def any_message(message: types.Message):
-    await States.token.set()
-    await message.answer(texts.reset_token())
 
 
 @dp.callback_query_handler(state="*")

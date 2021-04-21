@@ -21,7 +21,7 @@ notify = lambda notify_: notify_yes() if notify_ else notify_no()
 notify_yes = lambda: _("Хорошо! Поделюсь информацией о всех донатах.")
 notify_no = lambda: _("Как скажите! Но не проблема будет посмотреть донаты на сайте, заходите...")
 
-before_access__add_group = lambda: _("Перед тем, как пытаться получить дотсуп к группе, добавьте её!")
+before_access__add_group = lambda: _("Группа недоступна или удалена.")
 
 changed_is_report_donations = lambda is_rep: _("Теперь размещаю!") if is_rep else _("Больше не размещаю!")
 
@@ -39,4 +39,5 @@ new_donation = lambda d: \
 
 delete_all = lambda: _("Всё удалено. Нажмите /start для начала работы с ботом")
 
-reset_token = lambda: _("Отправьте мне новый токен, который Вы хотите установить.")
+reset_token_confirm = lambda: _("Вы уверены, что хотите сменить токен?\n"
+                                "Это приведет к <b>удалению существующих групп из бота.</b>")

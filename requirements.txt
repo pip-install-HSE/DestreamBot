@@ -1,5 +1,6 @@
 tortoise-orm
 asyncpg
+aiomysql
 aio_pika
 aerich
 python-dotenv==0.13.0
